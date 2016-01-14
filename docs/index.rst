@@ -1,5 +1,5 @@
-Welcome to skeleton documentation!
-========================================
+Welcome to keyrings.alt documentation!
+======================================
 
 .. toctree::
    :maxdepth: 1
@@ -7,11 +7,45 @@ Welcome to skeleton documentation!
    history
 
 
-.. automodule:: skeleton
+.. automodule:: keyrings.alt.file
     :members:
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: keyrings.alt.Gnome
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.Google
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.keyczar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.kwallet
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.multi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.pyfs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: keyrings.alt.Windows
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Indices and tables
 ==================
