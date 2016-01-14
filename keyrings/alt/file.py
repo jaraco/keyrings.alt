@@ -30,6 +30,10 @@ class FileBacked(object):
         """
         return os.path.join(platform_.data_root(), self.filename)
 
+    def __repr__(self):
+        tmpl = "<{self.__class__.__name__} at {self.file_path}>"
+        return tmpl.format(**locals())
+
 
 class BaseKeyring(FileBacked, KeyringBackend):
     """
