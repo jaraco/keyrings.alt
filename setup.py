@@ -47,6 +47,14 @@ setup_params = dict(
     ],
     entry_points={
         'keyring.backends': [
+            'file = keyrings.alt.file',
+            'Gnome = keyrings.alt.Gnome',
+            'Google = keyrings.alt.Google',
+            'keyczar = keyrings.alt.keyczar',
+            'kwallet = keyrings.alt.kwallet',
+            'multi = keyrings.alt.multi',
+            'pyfs = keyrings.alt.pyfs',
+            'Windows (alt) = keyrings.alt.Windows',
         ],
     },
 )
