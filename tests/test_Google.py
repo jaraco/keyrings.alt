@@ -8,7 +8,7 @@ from keyring.credentials import SimpleCredential
 from keyring.backend import NullCrypter
 from keyring import errors
 from keyring.py27compat import input, pickle
-from keyring.tests import mocks
+from . import mocks
 
 def is_gdata_supported():
     try:
