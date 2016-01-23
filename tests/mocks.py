@@ -1,23 +1,20 @@
 """
-mocks.py
-
 Various mock objects for testing
 """
 
 import base64
+import io
+
 from keyring.py27compat import pickle, unicode_str
-try:
-    from StringIO import StringIO
-except ImportError: # For Python 3
-    from io import StringIO
+
 
 class MockAtom(object):
     """ Mocks an atom in the GData service. """
     def __init__(self, value):
         self.text = value
-        
+
 class MockEntry(object):
-    """ Mocks and entry returned from the GData service. """       
+    """ Mocks and entry returned from the GData service. """
     def __init__(self, title, ID):
         self.title = MockAtom(title)
         self.id = MockAtom('http://mock.example.com/%s' % ID)
@@ -25,13 +22,13 @@ class MockEntry(object):
 
     def GetEditMediaLink(self):
         return MockLink()
-    
+
 
 class MockHTTPClient(object):
     """ Mocks the functionality of an http client. """
     def request(*args, **kwargs):
         pass
-    
+
 class MockGDataService(object):
     """ Provides the common functionality of a Google Service. """
     http_client = MockHTTPClient()
@@ -48,29 +45,29 @@ class MockGDataService(object):
         self.auth_service_url = auth_service_url
         self.server = server
         self.login_token = None
-    
+
     def GetClientLoginToken(self):
         return self.login_token
-        
+
     def SetClientLoginToken(self, token):
         self.login_token = token
-        
+
     def ClientLogin(self, username, password, account_type=None, service=None,
-                    auth_service_url=None, source=None, captcha_token=None, 
+                    auth_service_url=None, source=None, captcha_token=None,
                     captcha_response=None):
-        
+
         """ Client side login to the service. """
         if hasattr(self, '_login_err'):
             raise self._login_err()
 
 class MockDocumentService(MockGDataService):
-    """ 
-    Implements the minimum functionality of the Google Document service. 
+    """
+    Implements the minimum functionality of the Google Document service.
     """
 
     def Upload(self, media_source, title, folder_or_uri=None, label=None):
-        """ 
-        Upload a document.  
+        """
+        Upload a document.
         """
         if hasattr(self, '_upload_err'):
             raise self._upload_err()
@@ -81,12 +78,12 @@ class MockDocumentService(MockGDataService):
                                folder_or_uri=folder_or_uri, label=label)
         self._upload_count += 1
         return MockEntry(title, 'mockentry%3A' + title)
-    
+
     def QueryDocumentListFeed(self, uri):
         if hasattr(self, '_listfeed'):
             return self._listfeed
         return MockListFeed()
-                              
+
     def CreateFolder(self, title, folder_or_uri=None):
         if hasattr(self, '_create_folder_err'):
             raise self._create_folder_err()
@@ -94,7 +91,7 @@ class MockDocumentService(MockGDataService):
             return self._create_folder
         return MockListEntry()
 
-    def Put(self, data, uri, extra_headers=None, url_params=None, 
+    def Put(self, data, uri, extra_headers=None, url_params=None,
             escape_params=True, redirects_remaining=3, media_source=None,
             converter=None):
         self._put_data = None
@@ -136,7 +133,7 @@ class MockDocumentService(MockGDataService):
         if hasattr(self, '_request_response'):
             return MockHttpResponse(self._request_response)
 
-class MockHttpResponse(StringIO, object):
+class MockHttpResponse(io.BytesIO, object):
 
     def __init__(self, response_dict):
         super(MockHttpResponse, self).__init__(response_dict.get('data', ''))
