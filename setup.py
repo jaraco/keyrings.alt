@@ -42,7 +42,7 @@ setup_params = dict(
     description="Alternate keyring implementations",
     long_description=long_description,
     url="https://github.com/jaraco/keyrings.alt",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=['tests']),
     include_package_data=True,
     namespace_packages=['keyrings'],
     install_requires=[
