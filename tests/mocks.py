@@ -13,6 +13,7 @@ class MockAtom(object):
     def __init__(self, value):
         self.text = value
 
+
 class MockEntry(object):
     """ Mocks and entry returned from the GData service. """
     def __init__(self, title, ID):
@@ -28,6 +29,7 @@ class MockHTTPClient(object):
     """ Mocks the functionality of an http client. """
     def request(*args, **kwargs):
         pass
+
 
 class MockGDataService(object):
     """ Provides the common functionality of a Google Service. """
@@ -59,6 +61,7 @@ class MockGDataService(object):
         """ Client side login to the service. """
         if hasattr(self, '_login_err'):
             raise self._login_err()
+
 
 class MockDocumentService(MockGDataService):
     """
@@ -133,12 +136,14 @@ class MockDocumentService(MockGDataService):
         if hasattr(self, '_request_response'):
             return MockHttpResponse(self._request_response)
 
+
 class MockHttpResponse(io.BytesIO, object):
 
     def __init__(self, response_dict):
         super(MockHttpResponse, self).__init__(response_dict.get('data', ''))
         self.status = response_dict.get('status', 200)
         self.reason = response_dict.get('reason', '')
+
 
 class MockListFeed(object):
 
@@ -148,9 +153,10 @@ class MockListFeed(object):
             return self._entry
         return []
 
-class MockListEntry(object):
 
+class MockListEntry(object):
     pass
+
 
 class MockLink(object):
 
@@ -158,11 +164,13 @@ class MockLink(object):
     def href(self):
         return ''
 
+
 class MockContent(object):
 
     @property
     def src(self):
         return 'src'
+
 
 class MockDocumentListEntry(object):
 
@@ -173,16 +181,19 @@ class MockDocumentListEntry(object):
     def GetEditMediaLink(self):
         return MockLink()
 
+
 class MockKeyczarReader(object):
 
     def __init__(self, location):
         self.location = location
+
 
 class MockKeyczarEncryptedReader(object):
 
     def __init__(self, reader, crypter):
         self._reader = reader
         self._crypter = crypter
+
 
 class MockKeyczarReaders(object):
 
@@ -194,6 +205,7 @@ class MockKeyczarReaders(object):
     def EncryptedReader(reader, crypter):
         return MockKeyczarEncryptedReader(reader, crypter)
 
+
 class MockKeyczarCrypter(object):
 
     def __init__(self, reader):
@@ -202,6 +214,7 @@ class MockKeyczarCrypter(object):
     @staticmethod
     def Read(location):
         return MockKeyczarCrypter(MockKeyczarReader(location))
+
 
 class MockKeyczar(object):
 
