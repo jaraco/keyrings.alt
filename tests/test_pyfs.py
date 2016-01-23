@@ -44,7 +44,7 @@ class UnencryptedMemoryPyfilesystemKeyringNoSubDirTestCase(
     keyring_filename = 'mem://unencrypted'
 
     def init_keyring(self):
-        return keyring.backends.pyfs.PlaintextKeyring(
+        return pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
 
 
@@ -56,7 +56,7 @@ class UnencryptedMemoryPyfilesystemKeyringSubDirTestCase(
     keyring_filename = 'mem://some/sub/dir/unencrypted'
 
     def init_keyring(self):
-        return keyring.backends.pyfs.PlaintextKeyring(
+        return pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
 
 
@@ -68,7 +68,7 @@ class UnencryptedLocalPyfilesystemKeyringNoSubDirTestCase(
     keyring_filename = '%s/keyring.cfg' %tempfile.mkdtemp()
 
     def init_keyring(self):
-        return keyring.backends.pyfs.PlaintextKeyring(
+        return pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
 
     def test_handles_preexisting_keyring(self):
@@ -81,7 +81,7 @@ class UnencryptedLocalPyfilesystemKeyringNoSubDirTestCase(
             """).lstrip()
         keyring_file.write(file_data)
         keyring_file.close()
-        pyf_keyring = keyring.backends.pyfs.PlaintextKeyring(
+        pyf_keyring = pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
         self.assertEquals('pwd1', pyf_keyring.get_password('svc1', 'user1'))
 
@@ -102,7 +102,7 @@ class UnencryptedLocalPyfilesystemKeyringSubDirTestCase(
 
         if not os.path.exists(self.keyring_dir):
             os.makedirs(self.keyring_dir)
-        return keyring.backends.pyfs.PlaintextKeyring(
+        return pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
 
 @unittest.skipUnless(pyfs.BasicKeyring.viable, "Need Pyfilesystem")
@@ -111,7 +111,7 @@ class EncryptedMemoryPyfilesystemKeyringTestCase(PyfilesystemKeyringTests,
     """Test in memory with encryption"""
 
     def init_keyring(self):
-        return keyring.backends.pyfs.EncryptedKeyring(
+        return pyfs.EncryptedKeyring(
             ReverseCrypter(),
             filename='mem://encrypted/keyring.cfg')
 
@@ -121,7 +121,7 @@ class EncryptedLocalPyfilesystemKeyringNoSubDirTestCase(
     """Test using local temp files with encryption"""
 
     def init_keyring(self):
-        return keyring.backends.pyfs.EncryptedKeyring(
+        return pyfs.EncryptedKeyring(
             ReverseCrypter(),
             filename='temp://keyring.cfg')
 
@@ -131,6 +131,6 @@ class EncryptedLocalPyfilesystemKeyringSubDirTestCase(
     """Test using local temp files with encryption"""
 
     def init_keyring(self):
-        return keyring.backends.pyfs.EncryptedKeyring(
+        return pyfs.EncryptedKeyring(
             ReverseCrypter(),
             filename='temp://a/sub/dir/hierarchy/keyring.cfg')

@@ -2,7 +2,7 @@ import os
 import unittest
 
 from keyrings.alt import keyczar
-from keyring.tests import mocks
+from . import mocks
 
 def is_keyczar_supported():
     return hasattr(keyczar, 'keyczar')

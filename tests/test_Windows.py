@@ -9,7 +9,7 @@ from .test_file import FileKeyringTests
 
 def is_win32_crypto_supported():
     try:
-        __import__('keyring.backends._win_crypto')
+        __import__('keyrings.alt._win_crypto')
     except ImportError:
         return False
     return sys.platform in ['win32'] and sys.getwindowsversion()[-2] == 2
