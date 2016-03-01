@@ -4,17 +4,12 @@ import unittest
 from keyrings.alt import keyczar
 from . import mocks
 
-def is_keyczar_supported():
-    return hasattr(keyczar, 'keyczar')
-
-@unittest.skipUnless(is_keyczar_supported(),
-                     "Need Keyczar")
 class KeyczarCrypterTestCase(unittest.TestCase):
 
     """Test the keyczar crypter"""
 
     def setUp(self):
-        self._orig_keyczar = keyczar.keyczar
+        self._orig_keyczar = keyczar.keyczar if hasattr(keyczar, 'keyczar') else None
         keyczar.keyczar = mocks.MockKeyczar()
 
     def tearDown(self):
