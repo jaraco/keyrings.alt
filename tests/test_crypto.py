@@ -1,5 +1,8 @@
-import unittest
-import mock
+import sys, unittest
+if sys.version_info >= (3, 3):
+    from unittest import mock
+else:
+    import mock
 
 from .test_file import FileKeyringTests
 
