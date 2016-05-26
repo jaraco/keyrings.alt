@@ -54,6 +54,7 @@ setup_params = dict(
     ] + pytest_runner + sphinx + wheel,
     tests_require=[
         'keyring[test]',
+        'backports.unittest_mock',
     ] + test_requirements,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
