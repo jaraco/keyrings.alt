@@ -22,6 +22,7 @@ test_requirements = [
     'python-keyczar',
     'fs>=0.5',
     'pycrypto',
+    'mock',
 ]
 "dependencies for running tests"
 
@@ -33,6 +34,10 @@ if sys.version_info >= (3, 0):
     # keyczar doesn't currently install on Python 3. Omit it also.
     # http://code.google.com/p/keyczar/issues/detail?id=125
     test_requirements.remove('python-keyczar')
+
+    # mock is included in Python3 unittest
+    # https://pypi.python.org/pypi/mock
+    test_requirements.remove('mock')
 
 setup_params = dict(
     name='keyrings.alt',
