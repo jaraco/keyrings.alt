@@ -53,7 +53,6 @@ setup_params = dict(
         'setuptools_scm>=1.9',
     ] + pytest_runner + sphinx + wheel,
     tests_require=[
-        'keyring[test]',
         'backports.unittest_mock',
     ] + test_requirements,
     classifiers=[
