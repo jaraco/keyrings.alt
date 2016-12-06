@@ -1,7 +1,8 @@
 1.2
 ===
 
-Updated project skeleton. Tests now run under tox.
+Updated project skeleton. Tests now run under tox. Tagged
+commits are automatically released to PyPI.
 
 #6: Added license file.
 
