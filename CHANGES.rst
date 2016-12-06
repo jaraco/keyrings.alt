@@ -1,3 +1,10 @@
+1.2
+===
+
+Updated project skeleton. Tests now run under tox.
+
+#6: Added license file.
+
 1.1.1
 =====
 
