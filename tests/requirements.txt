@@ -2,7 +2,7 @@ pytest >= 2.8
 backports.unittest_mock
 keyring[test]
 
-fs>=0.5
+fs>=0.5,<2
 pycrypto
 
 # gdata doesn't currently install on Python 3
