@@ -1,3 +1,10 @@
+1.3
+===
+
+#9: Moved base file backend functionality from 'keyrings.alt.file'
+to 'keyrings.alt.base_file'. This allows the 'Windows' module to
+no longer trigger a circular import with the 'file' module.
+
 1.2
 ===
 

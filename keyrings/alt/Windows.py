@@ -6,7 +6,7 @@ import functools
 from keyring.util import properties
 from keyring.backend import KeyringBackend
 from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
-from . import file
+from . import file_base
 
 try:
     # prefer pywin32-ctypes
@@ -56,7 +56,7 @@ def has_wincrypto():
         _win_crypto.__name__
     return not bool(exc)
 
-class EncryptedKeyring(file.BaseKeyring):
+class EncryptedKeyring(file_base.Keyring):
     """
     A File-based keyring secured by Windows Crypto API.
     """
