@@ -27,11 +27,6 @@ Welcome to keyrings.alt documentation!
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: keyrings.alt.kwallet
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 .. automodule:: keyrings.alt.multi
     :members:
     :undoc-members:
