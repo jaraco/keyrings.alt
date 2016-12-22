@@ -1,3 +1,9 @@
+2.0
+===
+
+#12: Drop kwallet support, now superseded by the dual kwallet
+support in keyring.
+
 1.3
 ===
 
