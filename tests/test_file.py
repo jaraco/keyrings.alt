@@ -32,6 +32,12 @@ class FileKeyringTests(BackendBasicTests):
 
         self.assertEqual(password, self.keyring.decrypt(encrypted))
 
+    def test_scheme(self):
+        self.assertTrue(self.keyring.scheme is not None)
+
+    def test_version(self):
+        self.assertTrue(self.keyring.version is not None)
+
 
 class UncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
 
