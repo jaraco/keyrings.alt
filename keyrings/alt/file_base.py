@@ -27,8 +27,30 @@ class FileBacked(object):
         """
         return os.path.join(platform_.data_root(), self.filename)
 
+    @abc.abstractproperty
+    def scheme(self):
+        """
+        The encryption scheme used to store the passwords.
+        """
+        return 'not defined'
+
+    @abc.abstractproperty
+    def version(self):
+        """
+        The encryption version used to store the passwords.
+        """
+        return None
+
+    @properties.NonDataProperty
+    def file_version(self):
+        """
+        The encryption version used in file to store the passwords.
+        """
+        return None
+
     def __repr__(self):
-        tmpl = "<{self.__class__.__name__} at {self.file_path}>"
+        tmpl = "<{self.__class__.__name__} with {self.scheme} " \
+               "v.{self.version} at {self.file_path}>"
         return tmpl.format(**locals())
 
 
@@ -72,7 +94,7 @@ class Keyring(FileBacked, KeyringBackend):
             password_base64 = config.get(service, username).encode()
             # decode with base64
             password_encrypted = base64.decodestring(password_base64)
-            # decrypted the password
+            # decrypt the password
             password = self.decrypt(password_encrypted).decode('utf-8')
         except (configparser.NoOptionError, configparser.NoSectionError):
             password = None
@@ -81,14 +103,14 @@ class Keyring(FileBacked, KeyringBackend):
     def set_password(self, service, username, password):
         """Write the password in the file.
         """
-        service = escape_for_ini(service)
-        username = escape_for_ini(username)
-
         # encrypt the password
         password_encrypted = self.encrypt(password.encode('utf-8'))
         # encode with base64
         password_base64 = base64.encodestring(password_encrypted).decode()
 
+        self._write_config_value(service, username, password_base64)
+
+    def _write_config_value(self, service, key, value):
         # ensure the file exists
         self._ensure_file_path()
 
@@ -96,10 +118,13 @@ class Keyring(FileBacked, KeyringBackend):
         config = configparser.RawConfigParser()
         config.read(self.file_path)
 
+        service = escape_for_ini(service)
+        key = escape_for_ini(key)
+
         # update the keyring with the password
         if not config.has_section(service):
             config.add_section(service)
-        config.set(service, username, password_base64)
+        config.set(service, key, value)
 
         # save the keyring back to the file
         with open(self.file_path, 'w') as config_file:
