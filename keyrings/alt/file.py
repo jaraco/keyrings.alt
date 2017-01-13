@@ -21,6 +21,8 @@ class PlaintextKeyring(file_base.Keyring):
     "Applicable for all platforms, but not recommended"
 
     filename = 'keyring_pass.cfg'
+    scheme = 'no encyption'
+    version = '1.0'
 
     def encrypt(self, password):
         """Directly return the password itself.
@@ -37,7 +39,8 @@ class Encrypted(object):
     """
     PyCrypto-backed Encryption support
     """
-
+    scheme = 'PyCrypto [PBKDF2] AES256.CFB'
+    version = '1.0'
     block_size = 32
 
     def _create_cipher(self, password, salt, IV):
@@ -101,8 +104,15 @@ class EncryptedKeyring(Encrypted, file_base.Keyring):
         self.keyring_key = self._get_new_password()
         # set a reference password, used to check that the password provided
         #  matches for subsequent checks.
-        self.set_password('keyring-setting', 'password reference',
-            'password reference value')
+        self.set_password('keyring-setting',
+                          'password reference',
+                          'password reference value')
+        self._write_config_value('keyring-setting',
+                                 'scheme',
+                                 self.scheme)
+        self._write_config_value('keyring-setting',
+                                 'version',
+                                 self.version)
 
     def _check_file(self):
         """
@@ -117,6 +127,25 @@ class EncryptedKeyring(Encrypted, file_base.Keyring):
             config.get(
                 escape_for_ini('keyring-setting'),
                 escape_for_ini('password reference'),
+            )
+        except (configparser.NoSectionError, configparser.NoOptionError):
+            return False
+        # accept missing scheme
+        try:
+            scheme = config.get(
+                escape_for_ini('keyring-setting'),
+                escape_for_ini('scheme'),
+            )
+        except (configparser.NoSectionError, configparser.NoOptionError):
+            return True
+        if scheme != self.scheme:
+            raise ValueError("Encryption scheme mismatch "
+                             "(exp.: %s, found: %s)" % (self.scheme, scheme))
+        # if scheme exists, a version must exist, too
+        try:
+            self.file_version = config.get(
+                    escape_for_ini('keyring-setting'),
+                    escape_for_ini('version'),
             )
         except (configparser.NoSectionError, configparser.NoOptionError):
             return False
