@@ -47,6 +47,7 @@ setup_params = dict(
             'Gnome = keyrings.alt.Gnome',
             'Google = keyrings.alt.Google',
             'keyczar = keyrings.alt.keyczar',
+            'fernet = keyrings.alt.fernet',
             'multi = keyrings.alt.multi',
             'pyfs = keyrings.alt.pyfs',
             'Windows (alt) = keyrings.alt.Windows',
