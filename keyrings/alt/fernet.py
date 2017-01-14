@@ -1,16 +1,10 @@
 from __future__ import with_statement
 
 import os
-import getpass
-import base64
-import sys
 import json
-
-from keyring.py27compat import configparser
+import base64
 
 from keyring.util import properties
-from keyring.util.escape import escape as escape_for_ini
-
 from keyrings.alt.file import EncryptedKeyring
 
 class FernetEncryption(object):
@@ -74,11 +68,15 @@ class FernetKeyring(FernetEncryption, EncryptedKeyring):
         return json.dumps(data).encode()
 
     def decrypt(self, password_encrypted):
+        from cryptography.fernet import InvalidToken
         # unpack the encrypted payload
         data = json.loads(password_encrypted.decode())
         for key in data:
             data[key] = base64.decodestring(data[key].encode())
         cipher = self._create_cipher(self.keyring_key, data['salt'])
-        plaintext = cipher.decrypt(data['password_encrypted'])
+        try:
+            plaintext = cipher.decrypt(data['password_encrypted'])
+        except InvalidToken:
+            raise ValueError("Invalid password")
         assert plaintext.startswith(self.pw_prefix)
         return plaintext[len(self.pw_prefix):]
