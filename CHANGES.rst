@@ -1,3 +1,8 @@
+2.1
+===
+
+Add persistent scheme and version tags for file based backends.
+
 2.0
 ===
 
