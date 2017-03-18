@@ -10,7 +10,7 @@ from keyring.py27compat import configparser
 from keyring.util import properties
 from keyring.util.escape import escape as escape_for_ini
 
-from keyrings.cryptfile.file_base import (
+from keyrings.alt.file_base import (
         Keyring, decodebytes, encodebytes,
 )
 
