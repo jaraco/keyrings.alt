@@ -2,6 +2,7 @@
 ===
 
 Add persistent scheme and version tags for file based backends.
+Prepare for associated data handling in file based schemes.
 
 2.0
 ===
