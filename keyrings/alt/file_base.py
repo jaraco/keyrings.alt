@@ -1,8 +1,8 @@
 from __future__ import with_statement
 
 import os
-import base64
 import abc
+import base64
 
 from keyring.py27compat import configparser
 
@@ -10,6 +10,16 @@ from keyring.errors import PasswordDeleteError
 from keyring.backend import KeyringBackend
 from keyring.util import platform_, properties
 from keyring.util.escape import escape as escape_for_ini
+
+try:
+    encodebytes = base64.encodebytes
+except AttributeError:  # pragma: no cover
+    encodebytes = base64.encodestring
+
+try:
+    decodebytes = base64.decodebytes
+except AttributeError:  # pragma: no cover
+    decodebytes = base64.decodestring
 
 
 class FileBacked(object):
@@ -27,8 +37,30 @@ class FileBacked(object):
         """
         return os.path.join(platform_.data_root(), self.filename)
 
+    @abc.abstractproperty
+    def scheme(self):
+        """
+        The encryption scheme used to store the passwords.
+        """
+        return 'not defined'
+
+    @abc.abstractproperty
+    def version(self):
+        """
+        The encryption version used to store the passwords.
+        """
+        return None
+
+    @properties.NonDataProperty
+    def file_version(self):
+        """
+        The encryption version used in file to store the passwords.
+        """
+        return None
+
     def __repr__(self):
-        tmpl = "<{self.__class__.__name__} at {self.file_path}>"
+        tmpl = "<{self.__class__.__name__} with {self.scheme} " \
+               "v.{self.version} at {self.file_path}>"
         return tmpl.format(**locals())
 
 
@@ -43,16 +75,20 @@ class Keyring(FileBacked, KeyringBackend):
     """
 
     @abc.abstractmethod
-    def encrypt(self, password):
+    def encrypt(self, password, assoc = None):
         """
         Given a password (byte string), return an encrypted byte string.
+
+        assoc might provide associated data (typically: service and username)
         """
 
     @abc.abstractmethod
-    def decrypt(self, password_encrypted):
+    def decrypt(self, password_encrypted, assoc = None):
         """
         Given a password encrypted by a previous call to `encrypt`, return
         the original byte string.
+
+        assoc might provide associated data (typically: service and username)
         """
 
     def get_password(self, service, username):
@@ -61,6 +97,7 @@ class Keyring(FileBacked, KeyringBackend):
         """
         service = escape_for_ini(service)
         username = escape_for_ini(username)
+        assoc = (service + '\0' + username).encode()
 
         # load the passwords from the file
         config = configparser.RawConfigParser()
@@ -71,9 +108,13 @@ class Keyring(FileBacked, KeyringBackend):
         try:
             password_base64 = config.get(service, username).encode()
             # decode with base64
-            password_encrypted = base64.decodestring(password_base64)
-            # decrypted the password
-            password = self.decrypt(password_encrypted).decode('utf-8')
+            password_encrypted = decodebytes(password_base64)
+            # decrypt the password with associated data
+            try:
+                password = self.decrypt(password_encrypted, assoc).decode('utf-8')
+            except ValueError:
+                # decrypt the password without associated data
+                password = self.decrypt(password_encrypted).decode('utf-8')
         except (configparser.NoOptionError, configparser.NoSectionError):
             password = None
         return password
@@ -81,14 +122,16 @@ class Keyring(FileBacked, KeyringBackend):
     def set_password(self, service, username, password):
         """Write the password in the file.
         """
-        service = escape_for_ini(service)
-        username = escape_for_ini(username)
-
+        assoc = (escape_for_ini(service) + '\0' +
+                 escape_for_ini(username)).encode()
         # encrypt the password
-        password_encrypted = self.encrypt(password.encode('utf-8'))
-        # encode with base64
-        password_base64 = base64.encodestring(password_encrypted).decode()
+        password_encrypted = self.encrypt(password.encode('utf-8'), assoc)
+        # encode with base64 and add line break to untangle config file
+        password_base64 = '\n' + encodebytes(password_encrypted).decode()
 
+        self._write_config_value(service, username, password_base64)
+
+    def _write_config_value(self, service, key, value):
         # ensure the file exists
         self._ensure_file_path()
 
@@ -96,10 +139,13 @@ class Keyring(FileBacked, KeyringBackend):
         config = configparser.RawConfigParser()
         config.read(self.file_path)
 
+        service = escape_for_ini(service)
+        key = escape_for_ini(key)
+
         # update the keyring with the password
         if not config.has_section(service):
             config.add_section(service)
-        config.set(service, username, password_base64)
+        config.set(service, key, value)
 
         # save the keyring back to the file
         with open(self.file_path, 'w') as config_file:
@@ -111,7 +157,7 @@ class Keyring(FileBacked, KeyringBackend):
         If it doesn't, create it with "go-rwx" permissions.
         """
         storage_root = os.path.dirname(self.file_path)
-        if storage_root and not os.path.isdir(storage_root):
+        if storage_root and not os.path.isdir(storage_root):    # pragma: no cover
             os.makedirs(storage_root)
         if not os.path.isfile(self.file_path):
             # create the file without group/world permissions
