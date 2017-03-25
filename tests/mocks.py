@@ -4,8 +4,9 @@ Various mock objects for testing
 
 import base64
 import io
+import pickle
 
-from keyring.py27compat import pickle, unicode_str
+import six
 
 
 class MockAtom(object):
@@ -113,8 +114,7 @@ class MockDocumentService(MockGDataService):
             else:
                 raise put_err()
         # save the data for asserting against
-        assert isinstance(data, str) or isinstance(data, unicode_str), \
-            'Should be a string'
+        assert isinstance(data, six.string_types), 'Should be a string'
         self._put_data =  pickle.loads(base64.urlsafe_b64decode(data))
         self._put_count += 1
         return MockEntry('', 'mockentry%3A' + '')

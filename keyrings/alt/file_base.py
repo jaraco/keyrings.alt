@@ -4,7 +4,7 @@ import os
 import abc
 import base64
 
-from keyring.py27compat import configparser
+from six.moves import configparser
 
 from keyring.errors import PasswordDeleteError
 from keyring.backend import KeyringBackend

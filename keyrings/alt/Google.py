@@ -6,6 +6,9 @@ import copy
 import codecs
 import base64
 import io
+import pickle
+
+from six.moves import input
 
 try:
     import gdata.docs.service
@@ -15,7 +18,6 @@ except ImportError:
 from . import keyczar
 from keyring import errors
 from keyring import credentials
-from keyring.py27compat import input, pickle
 from keyring.backend import KeyringBackend
 from keyring.util import properties
 from keyring.errors import ExceptionRaisedContext

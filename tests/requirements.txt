@@ -1,6 +1,6 @@
 pytest >= 2.8
 backports.unittest_mock
-keyring[test]
+keyring[test] >= 10.3.1
 
 fs>=0.5,<2
 pycrypto

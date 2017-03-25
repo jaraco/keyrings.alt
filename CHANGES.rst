@@ -1,3 +1,9 @@
+2.2
+===
+
+#17: Drop dependency on keyring.py27compat and use six
+instead.
+
 2.1
 ===
 

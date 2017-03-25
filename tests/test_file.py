@@ -4,13 +4,14 @@ import sys
 import errno
 import unittest
 
+from six.moves import configparser
+
 import pytest
 from unittest import mock
 
 from keyring.tests.test_backend import BackendBasicTests
 from keyring.tests.util import random_string
 
-from keyring.py27compat import configparser
 from keyring.util.escape import escape as escape_for_ini
 
 from keyrings.alt import file

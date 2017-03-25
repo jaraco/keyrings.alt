@@ -5,7 +5,7 @@ import sys
 import json
 import getpass
 
-from keyring.py27compat import configparser
+from six.moves import configparser
 
 from keyring.util import properties
 from keyring.util.escape import escape as escape_for_ini

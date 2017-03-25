@@ -1,13 +1,15 @@
 import codecs
 import base64
 import unittest
+import pickle
+
+from six.moves import input
 
 from keyring.tests.test_backend import BackendBasicTests
 from keyrings.alt import Google
 from keyring.credentials import SimpleCredential
 from keyring.backend import NullCrypter
 from keyring import errors
-from keyring.py27compat import input, pickle
 from . import mocks
 
 def is_gdata_supported():
