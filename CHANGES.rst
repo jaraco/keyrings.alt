@@ -4,6 +4,8 @@
 #17: Drop dependency on keyring.py27compat and use six
 instead.
 
+#16: Minor tweaks to file-based backends.
+
 2.1
 ===
 
