@@ -103,7 +103,7 @@ class BasicKeyring(KeyringBackend):
                         self._pyfs = fs.remote.CacheFS(
                             self._pyfs, cache_timeout=self._cache_timeout)
                 open_file = self._pyfs.open(self._path, mode)
-        except fs.errors.ResourceNotFoundError:
+        except fs.errors.ResourceNotFound:
             if self._can_create:
                 segments = fs.opener.opener.split_segments(self.filename)
                 if segments:
@@ -140,7 +140,7 @@ class BasicKeyring(KeyringBackend):
                     self._pyfs = pyfs
                     self._path = url2
                     return pyfs.open(url2, mode)
-                except fs.errors.ResourceNotFoundError:
+                except fs.errors.ResourceNotFound:
                     if writeable:
                         raise
                     else:
