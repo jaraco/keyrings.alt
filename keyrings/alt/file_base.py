@@ -123,6 +123,9 @@ class Keyring(FileBacked, KeyringBackend):
     def set_password(self, service, username, password):
         """Write the password in the file.
         """
+        if not username:
+            # https://github.com/jaraco/keyrings.alt/issues/21
+            raise ValueError("Username cannot be blank.")
         assoc = self._generate_assoc(service, username)
         # encrypt the password
         password_encrypted = self.encrypt(password.encode('utf-8'), assoc)
