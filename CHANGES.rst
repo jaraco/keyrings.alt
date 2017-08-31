@@ -1,3 +1,9 @@
+2.3
+===
+
+#21: Raise ValueError on blank username in plaintext
+keyring, unsupported in the storage format.
+
 2.2
 ===
 
