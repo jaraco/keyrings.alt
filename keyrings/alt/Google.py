@@ -22,13 +22,17 @@ from keyring.backend import KeyringBackend
 from keyring.util import properties
 from keyring.errors import ExceptionRaisedContext
 
+
 class EnvironCredential(credentials.EnvironCredential):
     """Retrieve credentials from specifically named environment variables
     """
 
     def __init__(self):
-        super(EnvironCredential, self).__init__('GOOGLE_KEYRING_USER',
-            'GOOGLE_KEYRING_PASSWORD')
+        super(EnvironCredential, self).__init__(
+            'GOOGLE_KEYRING_USER',
+            'GOOGLE_KEYRING_PASSWORD',
+        )
+
 
 class DocsKeyring(KeyringBackend):
     """Backend that stores keyring on Google Docs.
@@ -43,10 +47,9 @@ class DocsKeyring(KeyringBackend):
     FAIL = 0
     CONFLICT = -1
 
-    def __init__(self, credential, source, crypter,
-                 collection=None, client=None,
-                 can_create=True, input_getter=input
-                ):
+    def __init__(
+            self, credential, source, crypter, collection=None, client=None,
+            can_create=True, input_getter=input):
         self.credential = credential
         self.crypter = crypter
         self.source = source
@@ -124,9 +127,12 @@ class DocsKeyring(KeyringBackend):
                         'Failed write after conflict detected')
             else:
                 raise errors.PasswordSetError(
-                    'Conflict detected, service:%s and username:%s was '\
-                    'set to a different value by someone else' %(service,
-                                                                 username))
+                    'Conflict detected, service:%s and username:%s was '
+                    'set to a different value by someone else' % (
+                        service,
+                        username,
+                    ),
+                )
 
         raise errors.PasswordSetError('Could not save keyring')
 
@@ -197,7 +203,7 @@ class DocsKeyring(KeyringBackend):
         return self.crypter.encrypt(value)
 
     def _get_doc_title(self):
-        return '%s' %self.keyring_title
+        return '%s' % self.keyring_title
 
     def _read(self):
         from gdata.docs.service import DocumentQuery
@@ -213,7 +219,7 @@ class DocsKeyring(KeyringBackend):
             else:
                 raise errors.InitError(
                     '%s not found in %s and create not permitted'
-                    %(self._get_doc_title(), self.collection))
+                    % (self._get_doc_title(), self.collection))
         else:
             docs_entry = docs.entry[0]
             file_contents = ''
@@ -251,7 +257,7 @@ class DocsKeyring(KeyringBackend):
                     file_contents,
                     self.docs_entry.GetEditMediaLink().href,
                     extra_headers=extra_headers
-                    )
+                )
             else:
                 from gdata.docs.service import DocumentQuery
                 # check for existence of folder, create if required
@@ -281,11 +287,12 @@ class DocsKeyring(KeyringBackend):
                 else:
                     # Google docs has a bug when updating a shared document
                     # using PUT from any account other that the owner.
-                    # It returns an error 400 "Sorry, there was an error saving the file. Please try again"
+                    # It returns an error 400 "Sorry, there was an error saving
+                    # the file. Please try again"
                     # *despite* actually updating the document!
                     # Workaround by re-reading to see if it actually updated
-                    if ex.message['body'].find(
-                        'Sorry, there was an error saving the file') != -1:
+                    msg = 'Sorry, there was an error saving the file'
+                    if ex.message['body'].find(msg) != -1:
                         new_docs_entry, new_keyring_dict = self._read()
                         if new_keyring_dict == keyring_dict:
                             result = self.OK
@@ -293,10 +300,11 @@ class DocsKeyring(KeyringBackend):
                             result = self.FAIL
                     else:
                         result = self.FAIL
-            except:
+            except Exception:
                 result = self.FAIL
 
         return result
+
 
 class KeyczarDocsKeyring(DocsKeyring):
     """Google Docs keyring using keyczar initialized from environment
@@ -317,7 +325,7 @@ class KeyczarDocsKeyring(DocsKeyring):
          1: recommended
         """
         try:
-            from keyczar import keyczar
+            __import__('keyczar.keyczar')
             return super(KeyczarDocsKeyring, self).supported()
         except ImportError:
             return -1

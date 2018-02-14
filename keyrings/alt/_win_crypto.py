@@ -12,6 +12,7 @@ from keyring.util.escape import u
 
 # Crypto API ctypes bindings
 
+
 class DATA_BLOB(Structure):
     _fields_ = [('cbData', wintypes.DWORD),
                 ('pbData', POINTER(wintypes.BYTE))]
@@ -22,6 +23,7 @@ class CRYPTPROTECT_PROMPTSTRUCT(Structure):
                 ('dwPromptFlags', wintypes.DWORD),
                 ('hwndApp', wintypes.HWND),
                 ('szPrompt', POINTER(wintypes.WCHAR))]
+
 
 # Flags for CRYPTPROTECT_PROMPTSTRUCT
 
@@ -58,7 +60,7 @@ CryptUnprotectData = WINFUNCTYPE(wintypes.BOOL,
                                  c_void_p,
                                  POINTER(CRYPTPROTECT_PROMPTSTRUCT),
                                  wintypes.DWORD, POINTER(DATA_BLOB))(
-                                         ('CryptUnprotectData', _dll))
+                                     ('CryptUnprotectData', _dll))
 
 # Functions
 

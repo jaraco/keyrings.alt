@@ -45,8 +45,10 @@ class Keyring(KeyringBackend):
         username = self._safe_string(username)
         for attrs_tuple in (('username', 'service'), ('user', 'domain')):
             attrs = GnomeKeyring.Attribute.list_new()
-            GnomeKeyring.Attribute.list_append_string(attrs, attrs_tuple[0], username)
-            GnomeKeyring.Attribute.list_append_string(attrs, attrs_tuple[1], service)
+            GnomeKeyring.Attribute.list_append_string(
+                attrs, attrs_tuple[0], username)
+            GnomeKeyring.Attribute.list_append_string(
+                attrs, attrs_tuple[1], service)
             result, items = GnomeKeyring.find_items_sync(
                 GnomeKeyring.ItemType.NETWORK_PASSWORD, attrs)
             if result == GnomeKeyring.Result.OK:
@@ -66,7 +68,11 @@ class Keyring(KeyringBackend):
             return None
 
         secret = items[0].secret
-        return secret if isinstance(secret, six.text_type) else secret.decode('utf-8')
+        return (
+            secret
+            if isinstance(secret, six.text_type) else
+            secret.decode('utf-8')
+        )
 
     def set_password(self, service, username, password):
         """Set password for the username of the service
@@ -77,7 +83,8 @@ class Keyring(KeyringBackend):
         attrs = GnomeKeyring.Attribute.list_new()
         GnomeKeyring.Attribute.list_append_string(attrs, 'username', username)
         GnomeKeyring.Attribute.list_append_string(attrs, 'service', service)
-        GnomeKeyring.Attribute.list_append_string(attrs, 'application', 'python-keyring')
+        GnomeKeyring.Attribute.list_append_string(
+            attrs, 'application', 'python-keyring')
         result = GnomeKeyring.item_create_sync(
             self.keyring_name, GnomeKeyring.ItemType.NETWORK_PASSWORD,
             "Password for '%s' on '%s'" % (username, service),

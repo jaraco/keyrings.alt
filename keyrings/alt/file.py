@@ -11,8 +11,9 @@ from keyring.util import properties
 from keyring.util.escape import escape as escape_for_ini
 
 from keyrings.alt.file_base import (
-        Keyring, decodebytes, encodebytes,
+    Keyring, decodebytes, encodebytes,
 )
+
 
 class PlaintextKeyring(Keyring):
     """Simple File Keyring with no encryption"""
@@ -24,12 +25,12 @@ class PlaintextKeyring(Keyring):
     scheme = 'no encyption'
     version = '1.0'
 
-    def encrypt(self, password, assoc = None):
+    def encrypt(self, password, assoc=None):
         """Directly return the password itself, ignore associated data.
         """
         return password
 
-    def decrypt(self, password_encrypted, assoc = None):
+    def decrypt(self, password_encrypted, assoc=None):
         """Directly return encrypted password, ignore associated data.
         """
         return password_encrypted
@@ -84,8 +85,8 @@ class EncryptedKeyring(Encrypted, Keyring):
         except ImportError:     # pragma: no cover
             raise RuntimeError("PyCrypto required")
         if not json:            # pragma: no cover
-            raise RuntimeError("JSON implementation such as simplejson "
-                "required.")
+            raise RuntimeError(
+                "JSON implementation such as simplejson required.")
         return .6
 
     @properties.NonDataProperty
@@ -169,8 +170,8 @@ class EncryptedKeyring(Encrypted, Keyring):
         """
         try:
             self.file_version = config.get(
-                    escape_for_ini('keyring-setting'),
-                    escape_for_ini('version'),
+                escape_for_ini('keyring-setting'),
+                escape_for_ini('version'),
             )
         except (configparser.NoSectionError, configparser.NoOptionError):
             return False
@@ -196,7 +197,7 @@ class EncryptedKeyring(Encrypted, Keyring):
         """
         del self.keyring_key
 
-    def encrypt(self, password, assoc = None):
+    def encrypt(self, password, assoc=None):
         # encrypt password, ignore associated data
         from Crypto.Random import get_random_bytes
         salt = get_random_bytes(self.block_size)
@@ -213,13 +214,13 @@ class EncryptedKeyring(Encrypted, Keyring):
             data[key] = encodebytes(data[key]).decode()[:-1]
         return json.dumps(data).encode()
 
-    def decrypt(self, password_encrypted, assoc = None):
+    def decrypt(self, password_encrypted, assoc=None):
         # unpack the encrypted payload, ignore associated data
         data = json.loads(password_encrypted.decode())
         for key in data:
             data[key] = decodebytes(data[key].encode())
-        cipher = self._create_cipher(self.keyring_key, data['salt'],
-            data['IV'])
+        cipher = self._create_cipher(
+            self.keyring_key, data['salt'], data['IV'])
         plaintext = cipher.decrypt(data['password_encrypted'])
         assert plaintext.startswith(self.pw_prefix)
         return plaintext[3:]

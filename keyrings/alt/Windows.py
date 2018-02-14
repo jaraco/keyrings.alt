@@ -10,14 +10,14 @@ from . import file_base
 
 try:
     # prefer pywin32-ctypes
-    from win32ctypes import pywintypes
+    __import__('win32ctypes.pywintypes')
     from win32ctypes import win32cred
     # force demand import to raise ImportError
     win32cred.__name__
 except ImportError:
     # fallback to pywin32
     try:
-        import pywintypes
+        __import__('pywintypes')
         import win32cred
     except ImportError:
         pass
@@ -36,6 +36,7 @@ try:
 except ImportError:
     pass
 
+
 def has_pywin32():
     """
     Does this environment have pywin32?
@@ -46,6 +47,7 @@ def has_pywin32():
         win32cred.__name__
     return not bool(exc)
 
+
 def has_wincrypto():
     """
     Does this environment have wincrypto?
@@ -55,6 +57,7 @@ def has_wincrypto():
     with ExceptionRaisedContext() as exc:
         _win_crypto.__name__
     return not bool(exc)
+
 
 class EncryptedKeyring(file_base.Keyring):
     """
@@ -140,7 +143,8 @@ class RegistryKeyring(KeyringBackend):
         """
         try:
             key_name = r'Software\%s\Keyring' % service
-            hkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_name, 0,
+            hkey = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, key_name, 0,
                 winreg.KEY_ALL_ACCESS)
             winreg.DeleteValue(hkey, username)
             winreg.CloseKey(hkey)
@@ -151,7 +155,8 @@ class RegistryKeyring(KeyringBackend):
 
     def _delete_key_if_empty(self, service):
         key_name = r'Software\%s\Keyring' % service
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_name, 0,
+        key = winreg.OpenKey(
+            winreg.HKEY_CURRENT_USER, key_name, 0,
             winreg.KEY_ALL_ACCESS)
         try:
             winreg.EnumValue(key, 0)
@@ -163,7 +168,8 @@ class RegistryKeyring(KeyringBackend):
         # it's empty; delete everything
         while key_name != 'Software':
             parent, sep, base = key_name.rpartition('\\')
-            key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, parent, 0,
+            key = winreg.OpenKey(
+                winreg.HKEY_CURRENT_USER, parent, 0,
                 winreg.KEY_ALL_ACCESS)
             winreg.DeleteKey(key, base)
             winreg.CloseKey(key)

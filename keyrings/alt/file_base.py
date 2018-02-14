@@ -76,7 +76,7 @@ class Keyring(FileBacked, KeyringBackend):
     """
 
     @abc.abstractmethod
-    def encrypt(self, password, assoc = None):
+    def encrypt(self, password, assoc=None):
         """
         Given a password (byte string) and assoc (byte string, optional),
         return an encrypted byte string.
@@ -85,7 +85,7 @@ class Keyring(FileBacked, KeyringBackend):
         """
 
     @abc.abstractmethod
-    def decrypt(self, password_encrypted, assoc = None):
+    def decrypt(self, password_encrypted, assoc=None):
         """
         Given a password encrypted by a previous call to `encrypt`, and assoc
         (byte string, optional), return the original byte string.
@@ -113,7 +113,8 @@ class Keyring(FileBacked, KeyringBackend):
             password_encrypted = decodebytes(password_base64)
             # decrypt the password with associated data
             try:
-                password = self.decrypt(password_encrypted, assoc).decode('utf-8')
+                password = self.decrypt(password_encrypted, assoc).decode(
+                    'utf-8')
             except ValueError:
                 # decrypt the password without associated data
                 password = self.decrypt(password_encrypted).decode('utf-8')
@@ -169,7 +170,8 @@ class Keyring(FileBacked, KeyringBackend):
         If it doesn't, create it with "go-rwx" permissions.
         """
         storage_root = os.path.dirname(self.file_path)
-        if storage_root and not os.path.isdir(storage_root):    # pragma: no cover
+        needs_storage_root = storage_root and not os.path.isdir(storage_root)
+        if needs_storage_root:  # pragma: no cover
             os.makedirs(storage_root)
         if not os.path.isfile(self.file_path):
             # create the file without group/world permissions

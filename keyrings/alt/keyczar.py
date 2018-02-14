@@ -11,10 +11,12 @@ except ImportError:
 from keyring.backend import Crypter
 from keyring import errors
 
+
 def has_keyczar():
     with errors.ExceptionRaisedContext() as exc:
         keyczar.__name__
     return not bool(exc)
+
 
 class BaseCrypter(Crypter):
     """Base Keyczar keyset encryption and decryption.
@@ -63,6 +65,7 @@ class BaseCrypter(Crypter):
             return ''
         return self.crypter.Decrypt(value)
 
+
 class Crypter(BaseCrypter):
     """A Keyczar crypter using locations specified in the constructor
     """
@@ -78,6 +81,7 @@ class Crypter(BaseCrypter):
     @property
     def encrypting_keyset_location(self):
         return self._encrypting_keyset_location
+
 
 class EnvironCrypter(BaseCrypter):
     """A Keyczar crypter using locations specified by environment vars

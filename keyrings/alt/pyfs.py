@@ -19,6 +19,7 @@ try:
 except ImportError:
     pass
 
+
 def has_pyfs():
     """
     Does this environment have pyfs installed?
@@ -28,6 +29,7 @@ def has_pyfs():
     with errors.ExceptionRaisedContext() as exc:
         fs.__name__
     return not bool(exc)
+
 
 class BasicKeyring(KeyringBackend):
     """BasicKeyring is a Pyfilesystem-based implementation of
@@ -96,8 +98,8 @@ class BasicKeyring(KeyringBackend):
             else:
                 if not hasattr(self, '_pyfs'):
                     # reuse the pyfilesystem and path
-                    self._pyfs, self._path = fs.opener.opener.parse(self.filename,
-                                               writeable=writeable)
+                    self._pyfs, self._path = fs.opener.opener.parse(
+                        self.filename, writeable=writeable)
                     # cache if permitted
                     if self._cache_timeout is not None:
                         self._pyfs = fs.remote.CacheFS(
@@ -119,19 +121,22 @@ class BasicKeyring(KeyringBackend):
                         else:
                             url2 = ''
                         host = split_url2[0]
-                    pyfs = fs.opener.opener.opendir('%s://%s' %(fs_name, host))
+                    pyfs = fs.opener.opener.opendir(
+                        '%s://%s' % (fs_name, host))
                     # cache if permitted
                     if self._cache_timeout is not None:
                         pyfs = fs.remote.CacheFS(
                             pyfs, cache_timeout=self._cache_timeout)
-                    # NOTE: fs.path.split does not function in the same way os os.path.split... at least under windows
+                    # NOTE: fs.path.split does not function in the same
+                    # way os os.path.split... at least under windows
                     url2_path, url2_filename = os.path.split(url2)
                     if url2_path and not pyfs.exists(url2_path):
                         pyfs.makedir(url2_path, recursive=True)
                 else:
                     # assume local filesystem
                     full_url = fs.opener._expand_syspath(self.filename)
-                    # NOTE: fs.path.split does not function in the same way os os.path.split... at least under windows
+                    # NOTE: fs.path.split does not function in the same
+                    # way os os.path.split... at least under windows
                     url2_path, url2 = os.path.split(full_url)
                     pyfs = fs.osfs.OSFS(url2_path)
 
@@ -221,6 +226,7 @@ class BasicKeyring(KeyringBackend):
             raise RuntimeError("pyfs required")
         return 2
 
+
 class UnicodeWriterAdapter(object):
     """
     Wrap an object with a .write method to accept 'str' on Python 2
@@ -237,8 +243,10 @@ class UnicodeWriterAdapter(object):
             value = value.decode('ascii')
         return self._orig.write(value)
 
+
 if sys.version_info > (3,):
-    UnicodeWriterAdapter = lambda x: x
+    def UnicodeWriterAdapter(x):  # noqa
+        return x
 
 
 class PlaintextKeyring(BasicKeyring):

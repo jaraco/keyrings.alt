@@ -4,6 +4,7 @@ from keyring.util import properties
 from keyring.backend import KeyringBackend
 from keyring import errors
 
+
 class MultipartKeyringWrapper(KeyringBackend):
 
     """A wrapper around an existing keyring that breaks the password into
@@ -25,12 +26,12 @@ class MultipartKeyringWrapper(KeyringBackend):
         """
         init_part = self._keyring.get_password(service, username)
         if init_part:
-            parts = [init_part,]
+            parts = [init_part]
             i = 1
             while True:
                 next_part = self._keyring.get_password(
                     service,
-                    '%s{{part_%d}}' %(username, i))
+                    '%s{{part_%d}}' % (username, i))
                 if next_part:
                     parts.append(next_part)
                     i += 1
@@ -48,7 +49,7 @@ class MultipartKeyringWrapper(KeyringBackend):
         for i, password_part in enumerate(password_parts):
             curr_username = username
             if i > 0:
-                curr_username += '{{part_%d}}' %i
+                curr_username += '{{part_%d}}' % i
             self._keyring.set_password(service, curr_username, password_part)
 
     def delete_password(self, service, username):
@@ -56,7 +57,7 @@ class MultipartKeyringWrapper(KeyringBackend):
         count = itertools.count(1)
         while True:
             part_name = '%(username)s{{part_%(index)d}}' % dict(
-                index = next(count), **vars())
+                index=next(count), **vars())
             try:
                 self._keyring.delete_password(service, part_name)
             except errors.PasswordDeleteError:
