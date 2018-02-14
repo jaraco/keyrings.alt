@@ -11,6 +11,11 @@ with io.open('README.rst', encoding='utf-8') as readme:
 
 name = 'keyrings.alt'
 description = 'Alternate keyring implementations'
+nspkg_technique = 'managed'
+"""
+Does this package use "native" namespace packages or
+pkg_resources "managed" namespace packages?
+"""
 
 params = dict(
     name=name,
@@ -22,12 +27,39 @@ params = dict(
     url="https://github.com/jaraco/" + name,
     packages=setuptools.find_packages(exclude=['tests']),
     include_package_data=True,
-    namespace_packages=name.split('.')[:-1],
+    namespace_packages=(
+        name.split('.')[:-1] if nspkg_technique == 'managed'
+        else []
+    ),
     python_requires='>=2.7',
     install_requires=[
         'six',
     ],
     extras_require={
+        'testing': [
+            'pytest>=2.8',
+            'pytest-sugar>=0.9.1',
+            'collective.checkdocs',
+
+            'backports.unittest_mock',
+            'keyring[test] >= 10.3.1',
+
+            'fs>=0.5,<2',
+            'pycrypto',
+
+            # gdata doesn't currently install on Python 3
+            # http://code.google.com/p/gdata-python-client/issues/detail?id=229
+            'gdata; python_version=="2.7"',
+
+            # keyczar doesn't currently install on Python 3.
+            # http://code.google.com/p/keyczar/issues/detail?id=125
+            'python-keyczar; python_version=="2.7"',
+        ],
+        'docs': [
+            'sphinx',
+            'jaraco.packaging>=3.2',
+            'rst.linker>=1.9',
+        ],
     },
     setup_requires=[
         'setuptools_scm>=1.15.0',

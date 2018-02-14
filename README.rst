@@ -3,17 +3,11 @@
 
 .. image:: https://img.shields.io/pypi/pyversions/keyrings.alt.svg
 
-.. image:: https://img.shields.io/pypi/dm/keyrings.alt.svg
-
 .. image:: https://img.shields.io/travis/jaraco/keyrings.alt/master.svg
-   :target: http://travis-ci.org/jaraco/keyrings.alt
+   :target: https://travis-ci.org/jaraco/keyrings.alt
+
+.. image:: https://readthedocs.org/projects/keyringsalt/badge/?version=latest
+   :target: https://keyringsalt.readthedocs.io/en/latest/?badge=latest
 
 Alternate keyring backend implementations for use with the
 `keyring package <https://pypi.python.org/pypi/keyring>`_.
-
-License
-=======
-
-License is indicated in the project metadata (typically one or more
-of the Trove classifiers). For more details, see `this explanation
-<https://github.com/jaraco/skeleton/issues/1>`_.
