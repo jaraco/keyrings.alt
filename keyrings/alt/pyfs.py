@@ -258,6 +258,7 @@ class PlaintextKeyring(BasicKeyring):
             NullCrypter(), filename=filename, can_create=can_create,
             cache_timeout=cache_timeout)
 
+
 class EncryptedKeyring(BasicKeyring):
     """Encrypted Pyfilesystem Keyring
     """
@@ -269,6 +270,7 @@ class EncryptedKeyring(BasicKeyring):
         super(EncryptedKeyring, self).__init__(
             crypter, filename=filename, can_create=can_create,
             cache_timeout=cache_timeout)
+
 
 class KeyczarKeyring(EncryptedKeyring):
     """Encrypted Pyfilesystem Keyring using Keyczar keysets specified in
