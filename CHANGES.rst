@@ -1,3 +1,8 @@
+2.4
+===
+
+#24: File based backends now reject non-string types for passwords.
+
 2.3
 ===
 
