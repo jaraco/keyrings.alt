@@ -11,3 +11,9 @@
 
 Alternate keyring backend implementations for use with the
 `keyring package <https://pypi.python.org/pypi/keyring>`_.
+
+Keyrings in this package may have security risks or other implications. These
+backends were extracted from the main keyring project to
+make them available for those who wish to employ them, but are
+discouraged for general production use. Include this module and use its
+backends at your own risk.
