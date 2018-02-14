@@ -11,7 +11,7 @@ with io.open('README.rst', encoding='utf-8') as readme:
 
 name = 'keyrings.alt'
 description = 'Alternate keyring implementations'
-nspkg_technique = 'managed'
+nspkg_technique = 'native'
 """
 Does this package use "native" namespace packages or
 pkg_resources "managed" namespace packages?

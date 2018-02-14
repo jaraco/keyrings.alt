@@ -1,3 +1,9 @@
+3.0
+===
+
+``keyrings`` namespace should now use the pkgutil native technique
+rather than relying on pkg_resources.
+
 2.4
 ===
 
