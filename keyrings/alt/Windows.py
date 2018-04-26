@@ -63,6 +63,7 @@ class EncryptedKeyring(file_base.Keyring):
     """
     A File-based keyring secured by Windows Crypto API.
     """
+    version = "1.0"
 
     @properties.ClassProperty
     @classmethod
