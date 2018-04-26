@@ -4,12 +4,14 @@ import unittest
 from keyrings.alt import keyczar
 from . import mocks
 
+
 class KeyczarCrypterTestCase(unittest.TestCase):
 
     """Test the keyczar crypter"""
 
     def setUp(self):
-        self._orig_keyczar = keyczar.keyczar if hasattr(keyczar, 'keyczar') else None
+        self._orig_keyczar = (
+            keyczar.keyczar if hasattr(keyczar, 'keyczar') else None)
         keyczar.keyczar = mocks.MockKeyczar()
 
     def tearDown(self):
@@ -27,7 +29,8 @@ class KeyczarCrypterTestCase(unittest.TestCase):
         self.assertEquals(location, kz_crypter.keyset_location)
         self.assertIsNone(kz_crypter.encrypting_keyset_location)
         self.assertIsInstance(kz_crypter.crypter, mocks.MockKeyczarCrypter)
-        self.assertIsInstance(kz_crypter.crypter.reader, mocks.MockKeyczarReader)
+        self.assertIsInstance(
+            kz_crypter.crypter.reader, mocks.MockKeyczarReader)
         self.assertEquals(location, kz_crypter.crypter.reader.location)
 
     def testKeyczarCrypterWithEncryptedReader(self):
@@ -62,7 +65,8 @@ class KeyczarCrypterTestCase(unittest.TestCase):
         self.assertEqual(location, kz_crypter.keyset_location)
         self.assertIsNone(kz_crypter.encrypting_keyset_location)
         os.environ[kz_crypter.ENC_KEYSET_ENV_VAR] = encrypting_location
-        self.assertEqual(encrypting_location, kz_crypter.encrypting_keyset_location)
+        self.assertEqual(
+            encrypting_location, kz_crypter.encrypting_keyset_location)
 
     def testEnvironCrypterThrowsExceptionOnMissingValues(self):
         kz_crypter = keyczar.EnvironCrypter()

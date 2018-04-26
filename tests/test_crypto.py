@@ -5,6 +5,7 @@ from .test_file import FileKeyringTests
 
 from keyrings.alt import file
 
+
 def is_crypto_supported():
     try:
         __import__('Crypto.Cipher.AES')

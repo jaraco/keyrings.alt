@@ -19,6 +19,7 @@ class ReverseCrypter(keyring.backend.Crypter):
     def decrypt(self, value):
         return value[::-1]
 
+
 class PyfilesystemKeyringTests(BackendBasicTests):
     """Base class for Pyfilesystem tests"""
 
@@ -65,7 +66,7 @@ class UnencryptedLocalPyfilesystemKeyringNoSubDirTestCase(
         PyfilesystemKeyringTests, unittest.TestCase):
     """Test using local temp files with no encryption"""
 
-    keyring_filename = '%s/keyring.cfg' %tempfile.mkdtemp()
+    keyring_filename = '%s/keyring.cfg' % tempfile.mkdtemp()
 
     def init_keyring(self):
         return pyfs.PlaintextKeyring(
@@ -90,6 +91,7 @@ class UnencryptedLocalPyfilesystemKeyringNoSubDirTestCase(
         if os.path.exists(self.keyring_filename):
             os.remove(self.keyring_filename)
 
+
 @unittest.skipUnless(pyfs.BasicKeyring.viable, "Need Pyfilesystem")
 class UnencryptedLocalPyfilesystemKeyringSubDirTestCase(
         PyfilesystemKeyringTests, unittest.TestCase):
@@ -105,8 +107,10 @@ class UnencryptedLocalPyfilesystemKeyringSubDirTestCase(
         return pyfs.PlaintextKeyring(
             filename=self.keyring_filename)
 
+
 @unittest.skipUnless(pyfs.BasicKeyring.viable, "Need Pyfilesystem")
-class EncryptedMemoryPyfilesystemKeyringTestCase(PyfilesystemKeyringTests,
+class EncryptedMemoryPyfilesystemKeyringTestCase(
+        PyfilesystemKeyringTests,
         unittest.TestCase):
     """Test in memory with encryption"""
 
@@ -114,6 +118,7 @@ class EncryptedMemoryPyfilesystemKeyringTestCase(PyfilesystemKeyringTests,
         return pyfs.EncryptedKeyring(
             ReverseCrypter(),
             filename='mem://encrypted/keyring.cfg')
+
 
 @unittest.skipUnless(pyfs.BasicKeyring.viable, "Need Pyfilesystem")
 class EncryptedLocalPyfilesystemKeyringNoSubDirTestCase(
@@ -124,6 +129,7 @@ class EncryptedLocalPyfilesystemKeyringNoSubDirTestCase(
         return pyfs.EncryptedKeyring(
             ReverseCrypter(),
             filename='temp://keyring.cfg')
+
 
 @unittest.skipUnless(pyfs.BasicKeyring.viable, "Need Pyfilesystem")
 class EncryptedLocalPyfilesystemKeyringSubDirTestCase(

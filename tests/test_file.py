@@ -31,7 +31,7 @@ class FileKeyringTests(BackendBasicTests):
             os.unlink(self.tmp_keyring_file)
         except (OSError,):
             e = sys.exc_info()[1]
-            if e.errno != errno.ENOENT: # No such file or directory
+            if e.errno != errno.ENOENT:  # No such file or directory
                 raise
 
     def get_config(self):
@@ -61,7 +61,8 @@ class FileKeyringTests(BackendBasicTests):
         password_base64 = '\n' + encodebytes(encrypted).decode()
         config.set('system', 'user', password_base64)
         self.save_config(config)
-        self.assertEqual(self.keyring.get_password('system', 'user'), 'password')
+        self.assertEqual(
+            self.keyring.get_password('system', 'user'), 'password')
 
     def test_delete_password(self):
         self.keyring.set_password('system', 'user', 'password')
@@ -74,23 +75,24 @@ class FileKeyringTests(BackendBasicTests):
         if not hasattr(self.keyring, '_check_file'):
             return
         # keyring file doesn't exist yet
-        self.assertTrue(self.keyring._check_file() == False)
+        self.assertTrue(self.keyring._check_file() is False)
         # generate keyring
         self.keyring.set_password('system', 'user', 'password')
         # valid keyring file exist now
-        self.assertTrue(self.keyring._check_file() == True)
+        self.assertTrue(self.keyring._check_file() is True)
         # lock keyring
         self.keyring._lock()
         # fetch password from keyring
-        self.assertTrue(self.keyring.get_password('system', 'user') == 'password')
+        self.assertTrue(
+            self.keyring.get_password('system', 'user') == 'password')
         # test missing password reference
         config = self.get_config()
         krsetting = escape_for_ini('keyring-setting')
         pwref = escape_for_ini('password reference')
-        #pwrefval = config.get(krsetting, pwref)
+        # pwrefval = config.get(krsetting, pwref)
         config.remove_option(krsetting, pwref)
         self.save_config(config)
-        self.assertTrue(self.keyring._check_file() == False)
+        self.assertTrue(self.keyring._check_file() is False)
 
     def test_scheme(self):
         # scheme exists
@@ -99,7 +101,7 @@ class FileKeyringTests(BackendBasicTests):
             return
 
         # keyring file doesn't exist yet
-        self.assertTrue(self.keyring._check_file() == False)
+        self.assertTrue(self.keyring._check_file() is False)
         # generate keyring
         self.keyring.set_password('system', 'user', 'password')
         config = self.get_config()
@@ -115,9 +117,9 @@ class FileKeyringTests(BackendBasicTests):
         with pytest.raises(ValueError):
             self.keyring._check_scheme(config)
 
-         # compatibility with former scheme format
+        # compatibility with former scheme format
         config.set(krsetting, scheme, 'PyCrypto ' + defscheme)
-        self.assertTrue(self.keyring._check_scheme(config) == None)
+        self.assertTrue(self.keyring._check_scheme(config) is None)
 
         # test with invalid KDF
         config.set(krsetting, scheme, defscheme.replace('PBKDF2', 'scrypt'))
@@ -127,7 +129,7 @@ class FileKeyringTests(BackendBasicTests):
         # a missing scheme is valid
         config.remove_option(krsetting, scheme)
         self.save_config(config)
-        self.assertTrue(self.keyring._check_file() == True)
+        self.assertTrue(self.keyring._check_file() is True)
 
         with pytest.raises(AttributeError):
             self.keyring._check_scheme(config)
@@ -143,7 +145,7 @@ class FileKeyringTests(BackendBasicTests):
         config = self.get_config()
 
         # default version valid
-        self.assertTrue(self.keyring._check_version(config) == True)
+        self.assertTrue(self.keyring._check_version(config) is True)
 
         krsetting = escape_for_ini('keyring-setting')
         version = escape_for_ini('version')
@@ -151,7 +153,7 @@ class FileKeyringTests(BackendBasicTests):
         # invalid, if version is missing
         config.remove_option(krsetting, version)
         self.save_config(config)
-        self.assertTrue(self.keyring._check_version(config) == False)
+        self.assertTrue(self.keyring._check_version(config) is False)
 
 
 class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
@@ -160,7 +162,7 @@ class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
         super(EncryptedFileKeyringTestCase, self).setUp()
         self.mock_getpass()
 
-    def mock_getpass(self, password = 'abcdef'):
+    def mock_getpass(self, password='abcdef'):
         fake_getpass = mock.Mock(return_value=password)
         self.patcher = mock.patch('getpass.getpass', fake_getpass)
         self.patcher.start()
@@ -180,7 +182,8 @@ class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
         self.patcher.stop()
         self.mock_getpass()
 
-    @unittest.skipIf(sys.platform == 'win32',
+    @unittest.skipIf(
+        sys.platform == 'win32',
         "Group/World permissions aren't meaningful on Windows")
     def test_keyring_not_created_world_writable(self):
         """
@@ -199,7 +202,8 @@ class UncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
     def init_keyring(self):
         return file.PlaintextKeyring()
 
-    @unittest.skipIf(sys.platform == 'win32',
+    @unittest.skipIf(
+        sys.platform == 'win32',
         "Group/World permissions aren't meaningful on Windows")
     def test_keyring_not_created_world_writable(self):
         """

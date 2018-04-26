@@ -20,7 +20,8 @@ class GnomeKeyringTestCase(BackendBasicTests, unittest.TestCase):
     def init_keyring(self):
         k = Gnome.Keyring()
 
-        # Store passwords in the session (in-memory) keyring for the tests. This
+        # Store passwords in the session (in-memory)
+        # keyring for the tests. This
         # is going to be automatically cleared when the user logoff.
         k.KEYRING_NAME = 'session'
 

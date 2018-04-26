@@ -20,7 +20,7 @@ class MockEntry(object):
     def __init__(self, title, ID):
         self.title = MockAtom(title)
         self.id = MockAtom('http://mock.example.com/%s' % ID)
-        self.ID = ID # simpler lookup for key value
+        self.ID = ID  # simpler lookup for key value
 
     def GetEditMediaLink(self):
         return MockLink()
@@ -35,6 +35,7 @@ class MockHTTPClient(object):
 class MockGDataService(object):
     """ Provides the common functionality of a Google Service. """
     http_client = MockHTTPClient()
+
     def __init__(self, email=None, password=None,
                  account_type='HOSTED_OR_GOOGLE', service=None,
                  auth_service_url=None, source=None, server=None,
@@ -78,8 +79,8 @@ class MockDocumentService(MockGDataService):
         if not hasattr(self, '_upload_count'):
             self._upload_count = 0
         # save the data for asserting against
-        self._upload_data =  dict(media_source=media_source, title=title,
-                               folder_or_uri=folder_or_uri, label=label)
+        self._upload_data = dict(media_source=media_source, title=title,
+                                 folder_or_uri=folder_or_uri, label=label)
         self._upload_count += 1
         return MockEntry(title, 'mockentry%3A' + title)
 
@@ -115,11 +116,12 @@ class MockDocumentService(MockGDataService):
                 raise put_err()
         # save the data for asserting against
         assert isinstance(data, six.string_types), 'Should be a string'
-        self._put_data =  pickle.loads(base64.urlsafe_b64decode(data))
+        self._put_data = pickle.loads(base64.urlsafe_b64decode(data))
         self._put_count += 1
         return MockEntry('', 'mockentry%3A' + '')
 
-    def Export(self, entry_or_id_or_url, file_path, gid=None, extra_params=None):
+    def Export(
+            self, entry_or_id_or_url, file_path, gid=None, extra_params=None):
         if hasattr(self, '_export_err'):
             raise self._export_err()
         if hasattr(self, '_export_data'):
@@ -220,7 +222,7 @@ class MockKeyczar(object):
 
     @property
     def readers(self):
-       return MockKeyczarReaders
+        return MockKeyczarReaders
 
     @property
     def Crypter(self):

@@ -7,12 +7,14 @@ from keyrings.alt import Windows
 from keyring.tests.test_backend import BackendBasicTests
 from .test_file import FileKeyringTests
 
+
 def is_win32_crypto_supported():
     try:
         __import__('keyrings.alt._win_crypto')
     except ImportError:
         return False
     return sys.platform in ['win32'] and sys.getwindowsversion()[-2] == 2
+
 
 def is_winvault_supported():
     try:
@@ -34,7 +36,8 @@ class Win32CryptoKeyringTestCase(FileKeyringTests, unittest.TestCase):
         return Windows.EncryptedKeyring()
 
 
-@unittest.skipUnless(Windows.RegistryKeyring.viable
+@unittest.skipUnless(
+    Windows.RegistryKeyring.viable
     and sys.version_info > (3,), "RegistryKeyring not viable")
 class RegistryKeyringTestCase(BackendBasicTests, unittest.TestCase):
     def tearDown(self):
