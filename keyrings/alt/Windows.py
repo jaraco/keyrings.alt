@@ -77,12 +77,12 @@ class EncryptedKeyring(file_base.Keyring):
 
     filename = 'wincrypto_pass.cfg'
 
-    def encrypt(self, password):
+    def encrypt(self, password, assoc=None):
         """Encrypt the password using the CryptAPI.
         """
         return _win_crypto.encrypt(password)
 
-    def decrypt(self, password_encrypted):
+    def decrypt(self, password_encrypted, assoc=None):
         """Decrypt the password using the CryptAPI.
         """
         return _win_crypto.decrypt(password_encrypted)
