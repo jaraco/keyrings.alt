@@ -1,8 +1,8 @@
 3.1
 ===
 
-``keyrings.alt`` no longer depends on the ``u`` helper in
-``keyring.escape``.
+``keyrings.alt`` no longer depends on the ``keyring.util.escape``
+module.
 
 3.0
 ===

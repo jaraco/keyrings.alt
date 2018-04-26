@@ -8,7 +8,7 @@ import getpass
 from six.moves import configparser
 
 from keyring.util import properties
-from keyring.util.escape import escape as escape_for_ini
+from .escape import escape as escape_for_ini
 
 from keyrings.alt.file_base import (
     Keyring, decodebytes, encodebytes,

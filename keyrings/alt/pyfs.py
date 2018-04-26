@@ -5,7 +5,7 @@ import sys
 from six.moves import configparser
 
 from keyring import errors
-from keyring.util.escape import escape as escape_for_ini
+from .escape import escape as escape_for_ini
 from keyring.util import platform_, properties
 from keyring.backend import KeyringBackend, NullCrypter
 from . import keyczar

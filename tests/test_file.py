@@ -12,10 +12,9 @@ from unittest import mock
 from keyring.tests.test_backend import BackendBasicTests
 from keyring.tests.util import random_string
 
-from keyring.util.escape import escape as escape_for_ini
-
 from keyrings.alt import file
 from keyrings.alt.file_base import encodebytes
+from keyrings.alt.escape import escape as escape_for_ini
 
 from keyring.errors import PasswordDeleteError
 
