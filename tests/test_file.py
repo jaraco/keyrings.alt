@@ -159,6 +159,7 @@ class FileKeyringTests(BackendBasicTests):
 class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
 
     def setUp(self):
+        pytest.importorskip('Crypto')
         super(EncryptedFileKeyringTestCase, self).setUp()
         self.mock_getpass()
 
