@@ -1,3 +1,9 @@
+3.1
+===
+
+``keyrings.alt`` no longer depends on the ``u`` helper in
+``keyring.escape``.
+
 3.0
 ===
 

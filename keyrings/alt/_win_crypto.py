@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 
 from ctypes import Structure, POINTER, c_void_p, cast, create_string_buffer, \
     c_char_p, byref, memmove
@@ -7,8 +8,6 @@ try:
 except ValueError:
     # see http://bugs.python.org/issue16396
     raise ImportError("wintypes")
-
-from keyring.util.escape import u
 
 # Crypto API ctypes bindings
 
@@ -72,7 +71,7 @@ def encrypt(data, non_interactive=0):
     blobout = DATA_BLOB()
 
     if not CryptProtectData(byref(blobin),
-                            u('python-keyring-lib.win32crypto'),
+                            'python-keyring-lib.win32crypto',
                             None, None, None,
                             CRYPTPROTECT_UI_FORBIDDEN,
                             byref(blobout)):
@@ -91,7 +90,7 @@ def decrypt(encrypted, non_interactive=0):
     blobout = DATA_BLOB()
 
     if not CryptUnprotectData(byref(blobin),
-                              u('python-keyring-lib.win32crypto'),
+                              'python-keyring-lib.win32crypto',
                               None, None, None,
                               CRYPTPROTECT_UI_FORBIDDEN,
                               byref(blobout)):
