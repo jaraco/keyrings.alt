@@ -6,6 +6,9 @@
 .. image:: https://img.shields.io/travis/jaraco/keyrings.alt/master.svg
    :target: https://travis-ci.org/jaraco/keyrings.alt
 
+.. image:: https://img.shields.io/appveyor/ci/jaraco/keyrings-alt/master.svg
+   :target: https://ci.appveyor.com/project/jaraco/keyrings-alt/branch/master
+
 .. image:: https://readthedocs.org/projects/keyringsalt/badge/?version=latest
    :target: https://keyringsalt.readthedocs.io/en/latest/?badge=latest
 

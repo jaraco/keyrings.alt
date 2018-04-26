@@ -37,10 +37,13 @@ params = dict(
     ],
     extras_require={
         'testing': [
-            'pytest>=2.8',
+            # upstream
+            'pytest>=3.5',
             'pytest-sugar>=0.9.1',
             'collective.checkdocs',
+            'pytest-flake8',
 
+            # local
             'backports.unittest_mock',
             'keyring[test] >= 10.3.1',
 
