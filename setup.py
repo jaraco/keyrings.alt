@@ -48,7 +48,7 @@ params = dict(
             'keyring[test] >= 10.3.1',
 
             'fs>=0.5,<2',
-            'pycrypto',
+            'pycrypto; sys_platform!="win32" or python_version=="2.7"',
 
             # gdata doesn't currently install on Python 3
             # http://code.google.com/p/gdata-python-client/issues/detail?id=229
