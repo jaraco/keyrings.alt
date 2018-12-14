@@ -91,8 +91,8 @@ class BasicKeyring(KeyringBackend):
             # NOTE: currently the MemOpener does not split off any filename
             #       which causes errors on close()
             #       so we add a dummy name and open it separately
-            if (self.filename.startswith('mem://') or
-                    self.filename.startswith('ram://')):
+            if (self.filename.startswith('mem://')
+                    or self.filename.startswith('ram://')):
                 open_file = fs.opener.fsopendir(self.filename).open('kr.cfg',
                                                                     mode)
             else:
