@@ -22,12 +22,12 @@ except ImportError:
 
 def has_pyfs():
     """
-    Does this environment have pyfs installed?
+    Does this environment have pyfs 1.x installed?
     Should return False even when Mercurial's Demand Import allowed import of
     fs.*.
     """
     with errors.ExceptionRaisedContext() as exc:
-        fs.__name__
+        fs.opener.opener
     return not bool(exc)
 
 
