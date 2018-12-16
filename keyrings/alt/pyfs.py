@@ -22,12 +22,12 @@ except ImportError:
 
 def has_pyfs():
     """
-    Does this environment have pyfs installed?
+    Does this environment have pyfs 1.x installed?
     Should return False even when Mercurial's Demand Import allowed import of
     fs.*.
     """
     with errors.ExceptionRaisedContext() as exc:
-        fs.__name__
+        fs.opener.opener
     return not bool(exc)
 
 
@@ -91,8 +91,8 @@ class BasicKeyring(KeyringBackend):
             # NOTE: currently the MemOpener does not split off any filename
             #       which causes errors on close()
             #       so we add a dummy name and open it separately
-            if (self.filename.startswith('mem://') or
-                    self.filename.startswith('ram://')):
+            if (self.filename.startswith('mem://')
+                    or self.filename.startswith('ram://')):
                 open_file = fs.opener.fsopendir(self.filename).open('kr.cfg',
                                                                     mode)
             else:

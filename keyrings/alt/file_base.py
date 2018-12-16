@@ -141,8 +141,8 @@ class Keyring(FileBacked, KeyringBackend):
     def _generate_assoc(self, service, username):
         """Generate tamper resistant bytestring of associated data
         """
-        return (escape_for_ini(service) + '\0' +
-                escape_for_ini(username)).encode()
+        return (escape_for_ini(service) + '\0'
+                + escape_for_ini(username)).encode()
 
     def _write_config_value(self, service, key, value):
         # ensure the file exists
