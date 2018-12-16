@@ -1,3 +1,13 @@
+3.1.1
+=====
+
+#31: Trap AttributeError in Gnome backend as in some environments
+it seems that will happen.
+
+#30: Fix issue where a backslash in the service name would cause
+errors on Registry backend on Windows.
+
+
 3.1
 ===
 
