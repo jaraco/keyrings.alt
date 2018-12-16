@@ -9,13 +9,9 @@ from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
 from . import file_base
 
 try:
-    import winreg
+    from six.moves import winreg
 except ImportError:
-    try:
-        # Python 2 compatibility
-        import _winreg as winreg
-    except ImportError:
-        pass
+    pass
 
 try:
     from . import _win_crypto
