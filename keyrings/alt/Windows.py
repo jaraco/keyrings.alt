@@ -9,20 +9,6 @@ from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
 from . import file_base
 
 try:
-    # prefer pywin32-ctypes
-    __import__('win32ctypes.pywintypes')
-    from win32ctypes import win32cred
-    # force demand import to raise ImportError
-    win32cred.__name__
-except ImportError:
-    # fallback to pywin32
-    try:
-        __import__('pywintypes')
-        import win32cred
-    except ImportError:
-        pass
-
-try:
     import winreg
 except ImportError:
     try:
@@ -35,17 +21,6 @@ try:
     from . import _win_crypto
 except ImportError:
     pass
-
-
-def has_pywin32():
-    """
-    Does this environment have pywin32?
-    Should return False even when Mercurial's Demand Import allowed import of
-    win32cred.
-    """
-    with ExceptionRaisedContext() as exc:
-        win32cred.__name__
-    return not bool(exc)
 
 
 def has_wincrypto():
