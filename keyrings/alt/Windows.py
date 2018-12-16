@@ -80,7 +80,8 @@ class RegistryKeyring(KeyringBackend):
 
     @staticmethod
     def _key_for_service(service):
-        return r'Software\{service}\Keyring'.format(**locals())
+        escaped = service.replace('\\', '__0x5c__')
+        return r'Software\{escaped}\Keyring'.format(**locals())
 
     def get_password(self, service, username):
         """Get password of the username for the service
