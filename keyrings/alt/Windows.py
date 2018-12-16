@@ -78,12 +78,16 @@ class RegistryKeyring(KeyringBackend):
             raise RuntimeError("Requires ctypes")
         return 2
 
+    @staticmethod
+    def _key_for_service(service):
+        return r'Software\{service}\Keyring'.format(**locals())
+
     def get_password(self, service, username):
         """Get password of the username for the service
         """
         try:
             # fetch the password
-            key = r'Software\%s\Keyring' % service
+            key = self._key_for_service(service)
             hkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key)
             password_saved = winreg.QueryValueEx(hkey, username)[0]
             password_base64 = password_saved.encode('ascii')
@@ -106,7 +110,7 @@ class RegistryKeyring(KeyringBackend):
         password_saved = password_base64.decode('ascii')
 
         # store the password
-        key_name = r'Software\%s\Keyring' % service
+        key_name = self._key_for_service(service)
         hkey = winreg.CreateKey(winreg.HKEY_CURRENT_USER, key_name)
         winreg.SetValueEx(hkey, username, 0, winreg.REG_SZ, password_saved)
 
@@ -114,7 +118,7 @@ class RegistryKeyring(KeyringBackend):
         """Delete the password for the username of the service.
         """
         try:
-            key_name = r'Software\%s\Keyring' % service
+            key_name = self._key_for_service(service)
             hkey = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, key_name, 0,
                 winreg.KEY_ALL_ACCESS)
@@ -126,7 +130,7 @@ class RegistryKeyring(KeyringBackend):
         self._delete_key_if_empty(service)
 
     def _delete_key_if_empty(self, service):
-        key_name = r'Software\%s\Keyring' % service
+        key_name = self._key_for_service(service)
         key = winreg.OpenKey(
             winreg.HKEY_CURRENT_USER, key_name, 0,
             winreg.KEY_ALL_ACCESS)
