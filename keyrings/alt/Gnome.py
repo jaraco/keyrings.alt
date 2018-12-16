@@ -2,7 +2,7 @@ try:
     import gi
     gi.require_version('GnomeKeyring', '1.0')
     from gi.repository import GnomeKeyring
-except (ImportError, ValueError):
+except (ImportError, ValueError, AttributeError):
     pass
 
 import six
