@@ -9,8 +9,8 @@
 .. image:: https://img.shields.io/appveyor/ci/jaraco/keyrings-alt/master.svg
    :target: https://ci.appveyor.com/project/jaraco/keyrings-alt/branch/master
 
-.. image:: https://readthedocs.org/projects/keyringsalt/badge/?version=latest
-   :target: https://keyringsalt.readthedocs.io/en/latest/?badge=latest
+.. .. image:: https://readthedocs.org/projects/keyringsalt/badge/?version=latest
+..    :target: https://keyringsalt.readthedocs.io/en/latest/?badge=latest
 
 Alternate keyring backend implementations for use with the
 `keyring package <https://pypi.python.org/pypi/keyring>`_.
