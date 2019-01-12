@@ -18,8 +18,8 @@ from keyrings.alt.file_base import (
 class PlaintextKeyring(Keyring):
     """Simple File Keyring with no encryption"""
 
-    priority = .5
-    "Applicable for all platforms, but not recommended"
+    priority = -0.5
+    "Applicable for all platforms, but utterly insecure"
 
     filename = 'keyring_pass.cfg'
     scheme = 'no encyption'
