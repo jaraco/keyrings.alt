@@ -24,3 +24,7 @@ backends were extracted from the main keyring project to
 make them available for those who wish to employ them, but are
 discouraged for general production use. Include this module and use its
 backends at your own risk.
+
+For example, the PlaintextKeyring stores passwords in plain text on the file
+system, defeating the intended purpose of this library to encourage best
+practices for security.
