@@ -20,7 +20,6 @@ from keyring.errors import PasswordDeleteError
 
 
 class FileKeyringTests(BackendBasicTests):
-
     def setUp(self):
         super(FileKeyringTests, self).setUp()
         self.keyring.file_path = self.tmp_keyring_file = tempfile.mktemp()
@@ -60,8 +59,7 @@ class FileKeyringTests(BackendBasicTests):
         password_base64 = '\n' + encodebytes(encrypted).decode()
         config.set('system', 'user', password_base64)
         self.save_config(config)
-        self.assertEqual(
-            self.keyring.get_password('system', 'user'), 'password')
+        self.assertEqual(self.keyring.get_password('system', 'user'), 'password')
 
     def test_delete_password(self):
         self.keyring.set_password('system', 'user', 'password')
@@ -82,8 +80,7 @@ class FileKeyringTests(BackendBasicTests):
         # lock keyring
         self.keyring._lock()
         # fetch password from keyring
-        self.assertTrue(
-            self.keyring.get_password('system', 'user') == 'password')
+        self.assertTrue(self.keyring.get_password('system', 'user') == 'password')
         # test missing password reference
         config = self.get_config()
         krsetting = escape_for_ini('keyring-setting')
@@ -156,7 +153,6 @@ class FileKeyringTests(BackendBasicTests):
 
 
 class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
-
     def setUp(self):
         pytest.importorskip('Crypto')
         super(EncryptedFileKeyringTestCase, self).setUp()
@@ -183,8 +179,8 @@ class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
         self.mock_getpass()
 
     @unittest.skipIf(
-        sys.platform == 'win32',
-        "Group/World permissions aren't meaningful on Windows")
+        sys.platform == 'win32', "Group/World permissions aren't meaningful on Windows"
+    )
     def test_keyring_not_created_world_writable(self):
         """
         Ensure that when keyring creates the file that it's not overly-
@@ -198,13 +194,12 @@ class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
 
 
 class UncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
-
     def init_keyring(self):
         return file.PlaintextKeyring()
 
     @unittest.skipIf(
-        sys.platform == 'win32',
-        "Group/World permissions aren't meaningful on Windows")
+        sys.platform == 'win32', "Group/World permissions aren't meaningful on Windows"
+    )
     def test_keyring_not_created_world_writable(self):
         """
         Ensure that when keyring creates the file that it's not overly-

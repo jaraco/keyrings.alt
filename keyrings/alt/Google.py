@@ -29,8 +29,7 @@ class EnvironCredential(credentials.EnvironCredential):
 
     def __init__(self):
         super(EnvironCredential, self).__init__(
-            'GOOGLE_KEYRING_USER',
-            'GOOGLE_KEYRING_PASSWORD',
+            'GOOGLE_KEYRING_USER', 'GOOGLE_KEYRING_PASSWORD'
         )
 
 
@@ -48,8 +47,15 @@ class DocsKeyring(KeyringBackend):
     CONFLICT = -1
 
     def __init__(
-            self, credential, source, crypter, collection=None, client=None,
-            can_create=True, input_getter=input):
+        self,
+        credential,
+        source,
+        crypter,
+        collection=None,
+        client=None,
+        can_create=True,
+        input_getter=input,
+    ):
         self.credential = credential
         self.crypter = crypter
         self.source = source
@@ -124,14 +130,12 @@ class DocsKeyring(KeyringBackend):
                     return
                 else:
                     raise errors.PasswordSetError(
-                        'Failed write after conflict detected')
+                        'Failed write after conflict detected'
+                    )
             else:
                 raise errors.PasswordSetError(
                     'Conflict detected, service:%s and username:%s was '
-                    'set to a different value by someone else' % (
-                        service,
-                        username,
-                    ),
+                    'set to a different value by someone else' % (service, username)
                 )
 
         raise errors.PasswordSetError('Could not save keyring')
@@ -143,9 +147,11 @@ class DocsKeyring(KeyringBackend):
     def client(self):
         if not self._client.GetClientLoginToken():
             try:
-                self._client.ClientLogin(self.credential.username,
-                                         self.credential.password,
-                                         self._client.source)
+                self._client.ClientLogin(
+                    self.credential.username,
+                    self.credential.password,
+                    self._client.source,
+                )
             except gdata.service.CaptchaRequired:
                 sys.stdout.write('Please visit ' + self._client.captcha_url)
                 answer = self.input_getter('Answer to the challenge? ')
@@ -156,7 +162,8 @@ class DocsKeyring(KeyringBackend):
                     self.credential.password,
                     self._client.source,
                     captcha_token=self._client.captcha_token,
-                    captcha_response=answer)
+                    captcha_response=answer,
+                )
             except gdata.service.BadAuthentication:
                 raise errors.InitError('Users credential were unrecognized')
             except gdata.service.Error:
@@ -207,6 +214,7 @@ class DocsKeyring(KeyringBackend):
 
     def _read(self):
         from gdata.docs.service import DocumentQuery
+
         title_query = DocumentQuery(categories=[self.collection])
         title_query['title'] = self._get_doc_title()
         title_query['title-exact'] = 'true'
@@ -219,7 +227,8 @@ class DocsKeyring(KeyringBackend):
             else:
                 raise errors.InitError(
                     '%s not found in %s and create not permitted'
-                    % (self._get_doc_title(), self.collection))
+                    % (self._get_doc_title(), self.collection)
+                )
         else:
             docs_entry = docs.entry[0]
             file_contents = ''
@@ -229,37 +238,45 @@ class DocsKeyring(KeyringBackend):
                 server_response = self.client.request('GET', url)
                 if server_response.status != 200:
                     raise errors.InitError(
-                        'Could not read existing Google Docs keyring')
+                        'Could not read existing Google Docs keyring'
+                    )
                 file_contents = server_response.read()
                 if file_contents.startswith(codecs.BOM_UTF8):
-                    file_contents = file_contents[len(codecs.BOM_UTF8):]
-                keyring_dict = pickle.loads(base64.urlsafe_b64decode(
-                    file_contents.decode('string-escape')))
+                    file_contents = file_contents[len(codecs.BOM_UTF8) :]
+                keyring_dict = pickle.loads(
+                    base64.urlsafe_b64decode(file_contents.decode('string-escape'))
+                )
             except pickle.UnpicklingError as ex:
                 raise errors.InitError(
-                    'Could not unpickle existing Google Docs keyring', ex)
+                    'Could not unpickle existing Google Docs keyring', ex
+                )
             except TypeError as ex:
                 raise errors.InitError(
-                    'Could not decode existing Google Docs keyring', ex)
+                    'Could not decode existing Google Docs keyring', ex
+                )
 
         return docs_entry, keyring_dict
 
     def _save_keyring(self, keyring_dict):
         """Helper to actually write the keyring to Google"""
         import gdata
+
         result = self.OK
         file_contents = base64.urlsafe_b64encode(pickle.dumps(keyring_dict))
         try:
             if self.docs_entry:
-                extra_headers = {'Content-Type': 'text/plain',
-                                 'Content-Length': len(file_contents)}
+                extra_headers = {
+                    'Content-Type': 'text/plain',
+                    'Content-Length': len(file_contents),
+                }
                 self.docs_entry = self.client.Put(
                     file_contents,
                     self.docs_entry.GetEditMediaLink().href,
-                    extra_headers=extra_headers
+                    extra_headers=extra_headers,
                 )
             else:
                 from gdata.docs.service import DocumentQuery
+
                 # check for existence of folder, create if required
                 folder_query = DocumentQuery(categories=['folder'])
                 folder_query['title'] = self.collection
@@ -274,11 +291,10 @@ class DocsKeyring(KeyringBackend):
                     file_handle=file_handle,
                     content_type='text/plain',
                     content_length=len(file_contents),
-                    file_name='temp')
+                    file_name='temp',
+                )
                 self.docs_entry = self.client.Upload(
-                    media_source,
-                    self._get_doc_title(),
-                    folder_or_uri=folder_entry
+                    media_source, self._get_doc_title(), folder_or_uri=folder_entry
                 )
         except gdata.service.RequestError as ex:
             try:
@@ -315,8 +331,7 @@ class KeyczarDocsKeyring(DocsKeyring):
         crypter = keyczar.EnvironCrypter()
         credential = EnvironCredential()
         source = os.environ.get('GOOGLE_KEYRING_SOURCE')
-        super(KeyczarDocsKeyring, self).__init__(
-            credential, source, crypter)
+        super(KeyczarDocsKeyring, self).__init__(credential, source, crypter)
 
     def supported(self):
         """Return if this keyring supports current environment:

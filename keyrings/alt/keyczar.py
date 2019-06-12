@@ -45,9 +45,9 @@ class BaseCrypter(Crypter):
             reader = keyczar.readers.CreateReader(self.keyset_location)
             if self.encrypting_keyset_location:
                 encrypting_keyczar = keyczar.Crypter.Read(
-                    self.encrypting_keyset_location)
-                reader = keyczar.readers.EncryptedReader(reader,
-                                                         encrypting_keyczar)
+                    self.encrypting_keyset_location
+                )
+                reader = keyczar.readers.EncryptedReader(reader, encrypting_keyczar)
             self._crypter = keyczar.Crypter(reader)
         return self._crypter
 
@@ -94,8 +94,7 @@ class EnvironCrypter(BaseCrypter):
     def keyset_location(self):
         val = os.environ.get(self.KEYSET_ENV_VAR)
         if not val:
-            raise ValueError('%s environment value not set' %
-                             self.KEYSET_ENV_VAR)
+            raise ValueError('%s environment value not set' % self.KEYSET_ENV_VAR)
         return val
 
     @property

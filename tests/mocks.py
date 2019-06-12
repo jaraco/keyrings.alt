@@ -11,12 +11,14 @@ import six
 
 class MockAtom(object):
     """ Mocks an atom in the GData service. """
+
     def __init__(self, value):
         self.text = value
 
 
 class MockEntry(object):
     """ Mocks and entry returned from the GData service. """
+
     def __init__(self, title, ID):
         self.title = MockAtom(title)
         self.id = MockAtom('http://mock.example.com/%s' % ID)
@@ -28,19 +30,31 @@ class MockEntry(object):
 
 class MockHTTPClient(object):
     """ Mocks the functionality of an http client. """
+
     def request(*args, **kwargs):
         pass
 
 
 class MockGDataService(object):
     """ Provides the common functionality of a Google Service. """
+
     http_client = MockHTTPClient()
 
-    def __init__(self, email=None, password=None,
-                 account_type='HOSTED_OR_GOOGLE', service=None,
-                 auth_service_url=None, source=None, server=None,
-                 additional_headers=None, handler=None, tokens=None,
-                 http_client=None, token_store=None):
+    def __init__(
+        self,
+        email=None,
+        password=None,
+        account_type='HOSTED_OR_GOOGLE',
+        service=None,
+        auth_service_url=None,
+        source=None,
+        server=None,
+        additional_headers=None,
+        handler=None,
+        tokens=None,
+        http_client=None,
+        token_store=None,
+    ):
         """ Create the Service with the default parameters. """
         self.email = email
         self.password = password
@@ -56,9 +70,17 @@ class MockGDataService(object):
     def SetClientLoginToken(self, token):
         self.login_token = token
 
-    def ClientLogin(self, username, password, account_type=None, service=None,
-                    auth_service_url=None, source=None, captcha_token=None,
-                    captcha_response=None):
+    def ClientLogin(
+        self,
+        username,
+        password,
+        account_type=None,
+        service=None,
+        auth_service_url=None,
+        source=None,
+        captcha_token=None,
+        captcha_response=None,
+    ):
 
         """ Client side login to the service. """
         if hasattr(self, '_login_err'):
@@ -79,8 +101,12 @@ class MockDocumentService(MockGDataService):
         if not hasattr(self, '_upload_count'):
             self._upload_count = 0
         # save the data for asserting against
-        self._upload_data = dict(media_source=media_source, title=title,
-                                 folder_or_uri=folder_or_uri, label=label)
+        self._upload_data = dict(
+            media_source=media_source,
+            title=title,
+            folder_or_uri=folder_or_uri,
+            label=label,
+        )
         self._upload_count += 1
         return MockEntry(title, 'mockentry%3A' + title)
 
@@ -96,9 +122,17 @@ class MockDocumentService(MockGDataService):
             return self._create_folder
         return MockListEntry()
 
-    def Put(self, data, uri, extra_headers=None, url_params=None,
-            escape_params=True, redirects_remaining=3, media_source=None,
-            converter=None):
+    def Put(
+        self,
+        data,
+        uri,
+        extra_headers=None,
+        url_params=None,
+        escape_params=True,
+        redirects_remaining=3,
+        media_source=None,
+        converter=None,
+    ):
         self._put_data = None
         if not hasattr(self, '_put_count'):
             self._put_count = 0
@@ -120,8 +154,7 @@ class MockDocumentService(MockGDataService):
         self._put_count += 1
         return MockEntry('', 'mockentry%3A' + '')
 
-    def Export(
-            self, entry_or_id_or_url, file_path, gid=None, extra_params=None):
+    def Export(self, entry_or_id_or_url, file_path, gid=None, extra_params=None):
         if hasattr(self, '_export_err'):
             raise self._export_err()
         if hasattr(self, '_export_data'):
@@ -140,7 +173,6 @@ class MockDocumentService(MockGDataService):
 
 
 class MockHttpResponse(io.BytesIO, object):
-
     def __init__(self, response_dict):
         super(MockHttpResponse, self).__init__(response_dict.get('data', ''))
         self.status = response_dict.get('status', 200)
@@ -148,7 +180,6 @@ class MockHttpResponse(io.BytesIO, object):
 
 
 class MockListFeed(object):
-
     @property
     def entry(self):
         if hasattr(self, '_entry'):
@@ -161,21 +192,18 @@ class MockListEntry(object):
 
 
 class MockLink(object):
-
     @property
     def href(self):
         return ''
 
 
 class MockContent(object):
-
     @property
     def src(self):
         return 'src'
 
 
 class MockDocumentListEntry(object):
-
     @property
     def content(self):
         return MockContent()
@@ -185,20 +213,17 @@ class MockDocumentListEntry(object):
 
 
 class MockKeyczarReader(object):
-
     def __init__(self, location):
         self.location = location
 
 
 class MockKeyczarEncryptedReader(object):
-
     def __init__(self, reader, crypter):
         self._reader = reader
         self._crypter = crypter
 
 
 class MockKeyczarReaders(object):
-
     @staticmethod
     def CreateReader(location):
         return MockKeyczarReader(location)
@@ -209,7 +234,6 @@ class MockKeyczarReaders(object):
 
 
 class MockKeyczarCrypter(object):
-
     def __init__(self, reader):
         self.reader = reader
 
@@ -219,7 +243,6 @@ class MockKeyczarCrypter(object):
 
 
 class MockKeyczar(object):
-
     @property
     def readers(self):
         return MockKeyczarReaders

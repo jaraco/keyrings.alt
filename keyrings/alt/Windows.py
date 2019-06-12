@@ -34,6 +34,7 @@ class EncryptedKeyring(file_base.Keyring):
     """
     A File-based keyring secured by Windows Crypto API.
     """
+
     version = "1.0"
 
     @properties.ClassProperty
@@ -45,7 +46,7 @@ class EncryptedKeyring(file_base.Keyring):
         """
         if not platform.system() == 'Windows':
             raise RuntimeError("Requires Windows")
-        return .8
+        return 0.8
 
     filename = 'wincrypto_pass.cfg'
 
@@ -121,8 +122,8 @@ class RegistryKeyring(KeyringBackend):
         try:
             key_name = self._key_for_service(service)
             hkey = winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER, key_name, 0,
-                winreg.KEY_ALL_ACCESS)
+                winreg.HKEY_CURRENT_USER, key_name, 0, winreg.KEY_ALL_ACCESS
+            )
             winreg.DeleteValue(hkey, username)
             winreg.CloseKey(hkey)
         except WindowsError:
@@ -133,8 +134,8 @@ class RegistryKeyring(KeyringBackend):
     def _delete_key_if_empty(self, service):
         key_name = self._key_for_service(service)
         key = winreg.OpenKey(
-            winreg.HKEY_CURRENT_USER, key_name, 0,
-            winreg.KEY_ALL_ACCESS)
+            winreg.HKEY_CURRENT_USER, key_name, 0, winreg.KEY_ALL_ACCESS
+        )
         try:
             winreg.EnumValue(key, 0)
             return
@@ -146,8 +147,8 @@ class RegistryKeyring(KeyringBackend):
         while key_name != 'Software':
             parent, sep, base = key_name.rpartition('\\')
             key = winreg.OpenKey(
-                winreg.HKEY_CURRENT_USER, parent, 0,
-                winreg.KEY_ALL_ACCESS)
+                winreg.HKEY_CURRENT_USER, parent, 0, winreg.KEY_ALL_ACCESS
+            )
             winreg.DeleteKey(key, base)
             winreg.CloseKey(key)
             key_name = parent
@@ -158,6 +159,7 @@ class OldPywinError(object):
     A compatibility wrapper for old PyWin32 errors, such as reported in
     https://bitbucket.org/kang/python-keyring-lib/issue/140/
     """
+
     def __init__(self, orig):
         self.orig = orig
 

@@ -10,15 +10,13 @@ from six.moves import configparser
 from keyring.util import properties
 from .escape import escape as escape_for_ini
 
-from keyrings.alt.file_base import (
-    Keyring, decodebytes, encodebytes,
-)
+from keyrings.alt.file_base import Keyring, decodebytes, encodebytes
 
 
 class PlaintextKeyring(Keyring):
     """Simple File Keyring with no encryption"""
 
-    priority = .5
+    priority = 0.5
     "Applicable for all platforms, but not recommended"
 
     filename = 'keyring_pass.cfg'
@@ -40,6 +38,7 @@ class Encrypted(object):
     """
     PyCrypto-backed Encryption support
     """
+
     scheme = '[PBKDF2] AES256.CFB'
     version = '1.0'
     block_size = 32
@@ -50,15 +49,15 @@ class Encrypted(object):
         """
         from Crypto.Protocol.KDF import PBKDF2
         from Crypto.Cipher import AES
+
         pw = PBKDF2(password, salt, dkLen=self.block_size)
-        return AES.new(pw[:self.block_size], AES.MODE_CFB, IV)
+        return AES.new(pw[: self.block_size], AES.MODE_CFB, IV)
 
     def _get_new_password(self):
         while True:
-            password = getpass.getpass(
-                "Please set a password for your new keyring: ")
+            password = getpass.getpass("Please set a password for your new keyring: ")
             confirm = getpass.getpass('Please confirm the password: ')
-            if password != confirm:     # pragma: no cover
+            if password != confirm:  # pragma: no cover
                 sys.stderr.write("Error: Your passwords didn't match\n")
                 continue
             if '' == password.strip():  # pragma: no cover
@@ -82,12 +81,11 @@ class EncryptedKeyring(Encrypted, Keyring):
             __import__('Crypto.Cipher.AES')
             __import__('Crypto.Protocol.KDF')
             __import__('Crypto.Random')
-        except ImportError:     # pragma: no cover
+        except ImportError:  # pragma: no cover
             raise RuntimeError("PyCrypto required")
-        if not json:            # pragma: no cover
-            raise RuntimeError(
-                "JSON implementation such as simplejson required.")
-        return .6
+        if not json:  # pragma: no cover
+            raise RuntimeError("JSON implementation such as simplejson required.")
+        return 0.6
 
     @properties.NonDataProperty
     def keyring_key(self):
@@ -105,15 +103,11 @@ class EncryptedKeyring(Encrypted, Keyring):
         self.keyring_key = self._get_new_password()
         # set a reference password, used to check that the password provided
         #  matches for subsequent checks.
-        self.set_password('keyring-setting',
-                          'password reference',
-                          'password reference value')
-        self._write_config_value('keyring-setting',
-                                 'scheme',
-                                 self.scheme)
-        self._write_config_value('keyring-setting',
-                                 'version',
-                                 self.version)
+        self.set_password(
+            'keyring-setting', 'password reference', 'password reference value'
+        )
+        self._write_config_value('keyring-setting', 'scheme', self.scheme)
+        self._write_config_value('keyring-setting', 'version', self.version)
 
     def _check_file(self):
         """
@@ -126,8 +120,7 @@ class EncryptedKeyring(Encrypted, Keyring):
         config.read(self.file_path)
         try:
             config.get(
-                escape_for_ini('keyring-setting'),
-                escape_for_ini('password reference'),
+                escape_for_ini('keyring-setting'), escape_for_ini('password reference')
             )
         except (configparser.NoSectionError, configparser.NoOptionError):
             return False
@@ -147,8 +140,7 @@ class EncryptedKeyring(Encrypted, Keyring):
         """
         try:
             scheme = config.get(
-                escape_for_ini('keyring-setting'),
-                escape_for_ini('scheme'),
+                escape_for_ini('keyring-setting'), escape_for_ini('scheme')
             )
         except (configparser.NoSectionError, configparser.NoOptionError):
             raise AttributeError("Encryption scheme missing")
@@ -158,8 +150,10 @@ class EncryptedKeyring(Encrypted, Keyring):
             scheme = scheme[9:]
 
         if scheme != self.scheme:
-            raise ValueError("Encryption scheme mismatch "
-                             "(exp.: %s, found: %s)" % (self.scheme, scheme))
+            raise ValueError(
+                "Encryption scheme mismatch "
+                "(exp.: %s, found: %s)" % (self.scheme, scheme)
+            )
 
     def _check_version(self, config):
         """
@@ -170,8 +164,7 @@ class EncryptedKeyring(Encrypted, Keyring):
         """
         try:
             self.file_version = config.get(
-                escape_for_ini('keyring-setting'),
-                escape_for_ini('version'),
+                escape_for_ini('keyring-setting'), escape_for_ini('version')
             )
         except (configparser.NoSectionError, configparser.NoOptionError):
             return False
@@ -183,7 +176,8 @@ class EncryptedKeyring(Encrypted, Keyring):
         user.
         """
         self.keyring_key = getpass.getpass(
-            'Please enter password for encrypted keyring: ')
+            'Please enter password for encrypted keyring: '
+        )
         try:
             ref_pw = self.get_password('keyring-setting', 'password reference')
             assert ref_pw == 'password reference value'
@@ -200,15 +194,15 @@ class EncryptedKeyring(Encrypted, Keyring):
     def encrypt(self, password, assoc=None):
         # encrypt password, ignore associated data
         from Crypto.Random import get_random_bytes
+
         salt = get_random_bytes(self.block_size)
         from Crypto.Cipher import AES
+
         IV = get_random_bytes(AES.block_size)
         cipher = self._create_cipher(self.keyring_key, salt, IV)
         password_encrypted = cipher.encrypt(self.pw_prefix + password)
         # Serialize the salt, IV, and encrypted password in a secure format
-        data = dict(
-            salt=salt, IV=IV, password_encrypted=password_encrypted,
-        )
+        data = dict(salt=salt, IV=IV, password_encrypted=password_encrypted)
         for key in data:
             # spare a few bytes: throw away newline from base64 encoding
             data[key] = encodebytes(data[key]).decode()[:-1]
@@ -219,8 +213,7 @@ class EncryptedKeyring(Encrypted, Keyring):
         data = json.loads(password_encrypted.decode())
         for key in data:
             data[key] = decodebytes(data[key].encode())
-        cipher = self._create_cipher(
-            self.keyring_key, data['salt'], data['IV'])
+        cipher = self._create_cipher(self.keyring_key, data['salt'], data['IV'])
         plaintext = cipher.decrypt(data['password_encrypted'])
         assert plaintext.startswith(self.pw_prefix)
         return plaintext[3:]

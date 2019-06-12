@@ -16,7 +16,6 @@ def ImportBlesser(*names, **changes):
 
 @unittest.skipUnless(Gnome.Keyring.viable, "Need GnomeKeyring")
 class GnomeKeyringTestCase(BackendBasicTests, unittest.TestCase):
-
     def init_keyring(self):
         k = Gnome.Keyring()
 

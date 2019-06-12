@@ -60,8 +60,10 @@ class FileBacked(object):
         return None
 
     def __repr__(self):
-        tmpl = "<{self.__class__.__name__} with {self.scheme} " \
-               "v.{self.version} at {self.file_path}>"
+        tmpl = (
+            "<{self.__class__.__name__} with {self.scheme} "
+            "v.{self.version} at {self.file_path}>"
+        )
         return tmpl.format(**locals())
 
 
@@ -113,8 +115,7 @@ class Keyring(FileBacked, KeyringBackend):
             password_encrypted = decodebytes(password_base64)
             # decrypt the password with associated data
             try:
-                password = self.decrypt(password_encrypted, assoc).decode(
-                    'utf-8')
+                password = self.decrypt(password_encrypted, assoc).decode('utf-8')
             except ValueError:
                 # decrypt the password without associated data
                 password = self.decrypt(password_encrypted).decode('utf-8')
@@ -141,8 +142,7 @@ class Keyring(FileBacked, KeyringBackend):
     def _generate_assoc(self, service, username):
         """Generate tamper resistant bytestring of associated data
         """
-        return (escape_for_ini(service) + '\0'
-                + escape_for_ini(username)).encode()
+        return (escape_for_ini(service) + '\0' + escape_for_ini(username)).encode()
 
     def _write_config_value(self, service, key, value):
         # ensure the file exists

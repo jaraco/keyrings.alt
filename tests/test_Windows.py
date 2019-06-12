@@ -16,17 +16,16 @@ def is_win32_crypto_supported():
     return sys.platform in ['win32'] and sys.getwindowsversion()[-2] == 2
 
 
-@unittest.skipUnless(is_win32_crypto_supported(),
-                     "Need Windows")
+@unittest.skipUnless(is_win32_crypto_supported(), "Need Windows")
 class Win32CryptoKeyringTestCase(FileKeyringTests, unittest.TestCase):
-
     def init_keyring(self):
         return Windows.EncryptedKeyring()
 
 
 @unittest.skipUnless(
-    Windows.RegistryKeyring.viable
-    and sys.version_info > (3,), "RegistryKeyring not viable")
+    Windows.RegistryKeyring.viable and sys.version_info > (3,),
+    "RegistryKeyring not viable",
+)
 class RegistryKeyringTestCase(BackendBasicTests, unittest.TestCase):
     def tearDown(self):
         # clean up any credentials created

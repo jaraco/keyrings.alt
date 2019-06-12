@@ -1,5 +1,6 @@
 try:
     import gi
+
     gi.require_version('GnomeKeyring', '1.0')
     from gi.repository import GnomeKeyring
 except (ImportError, ValueError, AttributeError):
@@ -45,12 +46,11 @@ class Keyring(KeyringBackend):
         username = self._safe_string(username)
         for attrs_tuple in (('username', 'service'), ('user', 'domain')):
             attrs = GnomeKeyring.Attribute.list_new()
-            GnomeKeyring.Attribute.list_append_string(
-                attrs, attrs_tuple[0], username)
-            GnomeKeyring.Attribute.list_append_string(
-                attrs, attrs_tuple[1], service)
+            GnomeKeyring.Attribute.list_append_string(attrs, attrs_tuple[0], username)
+            GnomeKeyring.Attribute.list_append_string(attrs, attrs_tuple[1], service)
             result, items = GnomeKeyring.find_items_sync(
-                GnomeKeyring.ItemType.NETWORK_PASSWORD, attrs)
+                GnomeKeyring.ItemType.NETWORK_PASSWORD, attrs
+            )
             if result == GnomeKeyring.Result.OK:
                 passwords += items
             elif deleting:
@@ -68,11 +68,7 @@ class Keyring(KeyringBackend):
             return None
 
         secret = items[0].secret
-        return (
-            secret
-            if isinstance(secret, six.text_type) else
-            secret.decode('utf-8')
-        )
+        return secret if isinstance(secret, six.text_type) else secret.decode('utf-8')
 
     def set_password(self, service, username, password):
         """Set password for the username of the service
@@ -84,11 +80,16 @@ class Keyring(KeyringBackend):
         GnomeKeyring.Attribute.list_append_string(attrs, 'username', username)
         GnomeKeyring.Attribute.list_append_string(attrs, 'service', service)
         GnomeKeyring.Attribute.list_append_string(
-            attrs, 'application', 'python-keyring')
+            attrs, 'application', 'python-keyring'
+        )
         result = GnomeKeyring.item_create_sync(
-            self.keyring_name, GnomeKeyring.ItemType.NETWORK_PASSWORD,
+            self.keyring_name,
+            GnomeKeyring.ItemType.NETWORK_PASSWORD,
             "Password for '%s' on '%s'" % (username, service),
-            attrs, password, True)[0]
+            attrs,
+            password,
+            True,
+        )[0]
         if result == GnomeKeyring.Result.CANCELLED:
             # The user pressed "Cancel" when prompted to unlock their keyring.
             raise PasswordSetError("Cancelled by user")
@@ -102,8 +103,7 @@ class Keyring(KeyringBackend):
         if not items:
             raise PasswordDeleteError("Password not found")
         for current in items:
-            result = GnomeKeyring.item_delete_sync(current.keyring,
-                                                   current.item_id)
+            result = GnomeKeyring.item_delete_sync(current.keyring, current.item_id)
             if result == GnomeKeyring.Result.CANCELLED:
                 raise PasswordDeleteError("Cancelled by user")
             elif result != GnomeKeyring.Result.OK:

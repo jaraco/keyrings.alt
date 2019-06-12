@@ -45,8 +45,7 @@ class BasicKeyring(KeyringBackend):
 
     _filename = 'keyring_pyf_pass.cfg'
 
-    def __init__(self, crypter, filename=None, can_create=True,
-                 cache_timeout=None):
+    def __init__(self, crypter, filename=None, can_create=True, cache_timeout=None):
         super(BasicKeyring, self).__init__()
         self._crypter = crypter
         def_fn = os.path.join(platform_.data_root(), self.__class__._filename)
@@ -91,19 +90,19 @@ class BasicKeyring(KeyringBackend):
             # NOTE: currently the MemOpener does not split off any filename
             #       which causes errors on close()
             #       so we add a dummy name and open it separately
-            if (self.filename.startswith('mem://')
-                    or self.filename.startswith('ram://')):
-                open_file = fs.opener.fsopendir(self.filename).open('kr.cfg',
-                                                                    mode)
+            if self.filename.startswith('mem://') or self.filename.startswith('ram://'):
+                open_file = fs.opener.fsopendir(self.filename).open('kr.cfg', mode)
             else:
                 if not hasattr(self, '_pyfs'):
                     # reuse the pyfilesystem and path
                     self._pyfs, self._path = fs.opener.opener.parse(
-                        self.filename, writeable=writeable)
+                        self.filename, writeable=writeable
+                    )
                     # cache if permitted
                     if self._cache_timeout is not None:
                         self._pyfs = fs.remote.CacheFS(
-                            self._pyfs, cache_timeout=self._cache_timeout)
+                            self._pyfs, cache_timeout=self._cache_timeout
+                        )
                 open_file = self._pyfs.open(self._path, mode)
         except fs.errors.ResourceNotFoundError:
             if self._can_create:
@@ -121,12 +120,12 @@ class BasicKeyring(KeyringBackend):
                         else:
                             url2 = ''
                         host = split_url2[0]
-                    pyfs = fs.opener.opener.opendir(
-                        '%s://%s' % (fs_name, host))
+                    pyfs = fs.opener.opener.opendir('%s://%s' % (fs_name, host))
                     # cache if permitted
                     if self._cache_timeout is not None:
                         pyfs = fs.remote.CacheFS(
-                            pyfs, cache_timeout=self._cache_timeout)
+                            pyfs, cache_timeout=self._cache_timeout
+                        )
                     # NOTE: fs.path.split does not function in the same
                     # way os os.path.split... at least under windows
                     url2_path, url2_filename = os.path.split(url2)
@@ -232,6 +231,7 @@ class UnicodeWriterAdapter(object):
     Wrap an object with a .write method to accept 'str' on Python 2
     and make it a Unicode string.
     """
+
     def __init__(self, orig):
         self._orig = orig
 
@@ -245,6 +245,7 @@ class UnicodeWriterAdapter(object):
 
 
 if sys.version_info > (3,):
+
     def UnicodeWriterAdapter(x):  # noqa
         return x
 
@@ -255,8 +256,11 @@ class PlaintextKeyring(BasicKeyring):
 
     def __init__(self, filename=None, can_create=True, cache_timeout=None):
         super(PlaintextKeyring, self).__init__(
-            NullCrypter(), filename=filename, can_create=can_create,
-            cache_timeout=cache_timeout)
+            NullCrypter(),
+            filename=filename,
+            can_create=can_create,
+            cache_timeout=cache_timeout,
+        )
 
 
 class EncryptedKeyring(BasicKeyring):
@@ -265,11 +269,13 @@ class EncryptedKeyring(BasicKeyring):
 
     _filename = 'crypted_pyf_pass.cfg'
 
-    def __init__(self, crypter, filename=None, can_create=True,
-                 cache_timeout=None):
+    def __init__(self, crypter, filename=None, can_create=True, cache_timeout=None):
         super(EncryptedKeyring, self).__init__(
-            crypter, filename=filename, can_create=can_create,
-            cache_timeout=cache_timeout)
+            crypter,
+            filename=filename,
+            can_create=can_create,
+            cache_timeout=cache_timeout,
+        )
 
 
 class KeyczarKeyring(EncryptedKeyring):
@@ -278,5 +284,4 @@ class KeyczarKeyring(EncryptedKeyring):
     """
 
     def __init__(self):
-        super(KeyczarKeyring, self).__init__(
-            keyczar.EnvironCrypter())
+        super(KeyczarKeyring, self).__init__(keyczar.EnvironCrypter())

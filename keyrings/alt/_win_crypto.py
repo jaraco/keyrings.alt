@@ -1,8 +1,17 @@
 from __future__ import unicode_literals
 
-from ctypes import Structure, POINTER, c_void_p, cast, create_string_buffer, \
-    c_char_p, byref, memmove
+from ctypes import (
+    Structure,
+    POINTER,
+    c_void_p,
+    cast,
+    create_string_buffer,
+    c_char_p,
+    byref,
+    memmove,
+)
 from ctypes import windll, WinDLL, WINFUNCTYPE
+
 try:
     from ctypes import wintypes
 except ValueError:
@@ -13,15 +22,16 @@ except ValueError:
 
 
 class DATA_BLOB(Structure):
-    _fields_ = [('cbData', wintypes.DWORD),
-                ('pbData', POINTER(wintypes.BYTE))]
+    _fields_ = [('cbData', wintypes.DWORD), ('pbData', POINTER(wintypes.BYTE))]
 
 
 class CRYPTPROTECT_PROMPTSTRUCT(Structure):
-    _fields_ = [('cbSize', wintypes.DWORD),
-                ('dwPromptFlags', wintypes.DWORD),
-                ('hwndApp', wintypes.HWND),
-                ('szPrompt', POINTER(wintypes.WCHAR))]
+    _fields_ = [
+        ('cbSize', wintypes.DWORD),
+        ('dwPromptFlags', wintypes.DWORD),
+        ('hwndApp', wintypes.HWND),
+        ('szPrompt', POINTER(wintypes.WCHAR)),
+    ]
 
 
 # Flags for CRYPTPROTECT_PROMPTSTRUCT
@@ -43,38 +53,46 @@ CRYPTPROTECT_CRED_REGENERATE = 0x80
 
 _dll = WinDLL('CRYPT32.DLL')
 
-CryptProtectData = WINFUNCTYPE(wintypes.BOOL,
-                               POINTER(DATA_BLOB),
-                               POINTER(wintypes.WCHAR),
-                               POINTER(DATA_BLOB),
-                               c_void_p,
-                               POINTER(CRYPTPROTECT_PROMPTSTRUCT),
-                               wintypes.DWORD,
-                               POINTER(DATA_BLOB))(('CryptProtectData', _dll))
+CryptProtectData = WINFUNCTYPE(
+    wintypes.BOOL,
+    POINTER(DATA_BLOB),
+    POINTER(wintypes.WCHAR),
+    POINTER(DATA_BLOB),
+    c_void_p,
+    POINTER(CRYPTPROTECT_PROMPTSTRUCT),
+    wintypes.DWORD,
+    POINTER(DATA_BLOB),
+)(('CryptProtectData', _dll))
 
-CryptUnprotectData = WINFUNCTYPE(wintypes.BOOL,
-                                 POINTER(DATA_BLOB),
-                                 POINTER(wintypes.WCHAR),
-                                 POINTER(DATA_BLOB),
-                                 c_void_p,
-                                 POINTER(CRYPTPROTECT_PROMPTSTRUCT),
-                                 wintypes.DWORD, POINTER(DATA_BLOB))(
-                                     ('CryptUnprotectData', _dll))
+CryptUnprotectData = WINFUNCTYPE(
+    wintypes.BOOL,
+    POINTER(DATA_BLOB),
+    POINTER(wintypes.WCHAR),
+    POINTER(DATA_BLOB),
+    c_void_p,
+    POINTER(CRYPTPROTECT_PROMPTSTRUCT),
+    wintypes.DWORD,
+    POINTER(DATA_BLOB),
+)(('CryptUnprotectData', _dll))
 
 # Functions
 
 
 def encrypt(data, non_interactive=0):
-    blobin = DATA_BLOB(cbData=len(data),
-                       pbData=cast(c_char_p(data),
-                                   POINTER(wintypes.BYTE)))
+    blobin = DATA_BLOB(
+        cbData=len(data), pbData=cast(c_char_p(data), POINTER(wintypes.BYTE))
+    )
     blobout = DATA_BLOB()
 
-    if not CryptProtectData(byref(blobin),
-                            'python-keyring-lib.win32crypto',
-                            None, None, None,
-                            CRYPTPROTECT_UI_FORBIDDEN,
-                            byref(blobout)):
+    if not CryptProtectData(
+        byref(blobin),
+        'python-keyring-lib.win32crypto',
+        None,
+        None,
+        None,
+        CRYPTPROTECT_UI_FORBIDDEN,
+        byref(blobout),
+    ):
         raise OSError("Can't encrypt")
 
     encrypted = create_string_buffer(blobout.cbData)
@@ -84,16 +102,20 @@ def encrypt(data, non_interactive=0):
 
 
 def decrypt(encrypted, non_interactive=0):
-    blobin = DATA_BLOB(cbData=len(encrypted),
-                       pbData=cast(c_char_p(encrypted),
-                                   POINTER(wintypes.BYTE)))
+    blobin = DATA_BLOB(
+        cbData=len(encrypted), pbData=cast(c_char_p(encrypted), POINTER(wintypes.BYTE))
+    )
     blobout = DATA_BLOB()
 
-    if not CryptUnprotectData(byref(blobin),
-                              'python-keyring-lib.win32crypto',
-                              None, None, None,
-                              CRYPTPROTECT_UI_FORBIDDEN,
-                              byref(blobout)):
+    if not CryptUnprotectData(
+        byref(blobin),
+        'python-keyring-lib.win32crypto',
+        None,
+        None,
+        None,
+        CRYPTPROTECT_UI_FORBIDDEN,
+        byref(blobout),
+    ):
         raise OSError("Can't decrypt")
 
     data = create_string_buffer(blobout.cbData)
