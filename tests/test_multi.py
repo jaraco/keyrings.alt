@@ -41,15 +41,15 @@ class MultipartKeyringWrapperTestCase(unittest.TestCase):
         wrapped_kr = self.MockKeyring()
         kr = multi.MultipartKeyringWrapper(wrapped_kr)
         kr.set_password('s1', 'u1', 'p1')
-        self.assertEquals(wrapped_kr.passwords, {'s1u1': 'p1'})
+        self.assertEqual(wrapped_kr.passwords, {'s1u1': 'p1'})
         # should be able to read it back
-        self.assertEquals(kr.get_password('s1', 'u1'), 'p1')
+        self.assertEqual(kr.get_password('s1', 'u1'), 'p1')
 
     def testLargePasswordSetInMultipleParts(self):
         wrapped_kr = self.MockKeyring()
         kr = multi.MultipartKeyringWrapper(wrapped_kr, max_password_size=2)
         kr.set_password('s2', 'u2', '0123456')
-        self.assertEquals(
+        self.assertEqual(
             wrapped_kr.passwords,
             {
                 's2u2': '01',
@@ -60,4 +60,4 @@ class MultipartKeyringWrapperTestCase(unittest.TestCase):
         )
 
         # should be able to read it back
-        self.assertEquals(kr.get_password('s2', 'u2'), '0123456')
+        self.assertEqual(kr.get_password('s2', 'u2'), '0123456')

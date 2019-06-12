@@ -86,7 +86,7 @@ class UnencryptedLocalPyfilesystemKeyringNoSubDirTestCase(
         keyring_file.write(file_data)
         keyring_file.close()
         pyf_keyring = pyfs.PlaintextKeyring(filename=self.keyring_filename)
-        self.assertEquals('pwd1', pyf_keyring.get_password('svc1', 'user1'))
+        self.assertEqual('pwd1', pyf_keyring.get_password('svc1', 'user1'))
 
     def tearDown(self):
         del self.keyring

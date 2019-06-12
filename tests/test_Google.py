@@ -223,7 +223,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
         self._init_keyring(client)
         self.keyring.set_password('sectionWriteChk', 'userWritechk', 'new_pwd')
         self.assertIsNotNone(client._put_data, 'Should have written data')
-        self.assertEquals(
+        self.assertEqual(
             'new_pwd',
             client._put_data.get('sectionWriteChk').get('userWritechk'),
             'Did not write updated password!',
@@ -258,7 +258,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
             'sectionWriteConflictA', 'userwriteConflictA', new_pwd
         )
 
-        self.assertEquals(
+        self.assertEqual(
             self.keyring.get_password('sectionWriteConflictA', 'userwriteConflictA'),
             new_pwd,
         )
@@ -331,7 +331,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
         self.keyring.set_password(
             'sectionWriteConflictC', 'userwriteConflictC', new_pwd
         )
-        self.assertEquals(
+        self.assertEqual(
             self.keyring.get_password('sectionWriteConflictC', 'userwriteConflictC'),
             new_pwd,
         )
@@ -403,7 +403,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
             status=200, data=self._encode_data(correct_read_entries)
         )
         self.keyring.set_password('sectionBrokenPut', 'userBrokenPut', new_pwd)
-        self.assertEquals(
+        self.assertEqual(
             self.keyring.get_password('sectionBrokenPut', 'userBrokenPut'), new_pwd
         )
 
