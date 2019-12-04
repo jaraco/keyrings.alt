@@ -1,3 +1,9 @@
+v3.2.0
+=====
+
+In tests, rely on pycryptodome instead of pycrypto for improved
+compatibility.
+
 3.1.1
 =====
 
