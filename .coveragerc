@@ -1,4 +1,5 @@
 [run]
+omit = .tox/*
 branch = True
 
 [report]
