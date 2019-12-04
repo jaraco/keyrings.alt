@@ -4,6 +4,8 @@ v3.2.0
 In tests, rely on pycryptodome instead of pycrypto for improved
 compatibility.
 
+In tests, rely on pytest instead of unittest.
+
 3.1.1
 =====
 
