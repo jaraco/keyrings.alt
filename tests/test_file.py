@@ -3,6 +3,7 @@ import tempfile
 import sys
 import errno
 import unittest
+import getpass
 
 from six.moves import configparser
 
@@ -20,11 +21,10 @@ from keyring.errors import PasswordDeleteError
 
 
 class FileKeyringTests(BackendBasicTests):
-    def setUp(self):
-        super(FileKeyringTests, self).setUp()
+    @pytest.fixture(autouse=True)
+    def keyring_with_file(self):
         self.keyring.file_path = self.tmp_keyring_file = tempfile.mktemp()
-
-    def tearDown(self):
+        yield
         try:
             os.unlink(self.tmp_keyring_file)
         except (OSError,):
@@ -152,31 +152,21 @@ class FileKeyringTests(BackendBasicTests):
         self.assertTrue(self.keyring._check_version(config) is False)
 
 
-class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
-    def setUp(self):
+class EncryptedFileKeyringTestCase(FileKeyringTests):
+    @pytest.fixture(autouse=True, scope='class')
+    def crypt_fixture(self, monkeypatch):
         pytest.importorskip('Crypto')
-        super(EncryptedFileKeyringTestCase, self).setUp()
-        self.mock_getpass()
-
-    def mock_getpass(self, password='abcdef'):
-        fake_getpass = mock.Mock(return_value=password)
-        self.patcher = mock.patch('getpass.getpass', fake_getpass)
-        self.patcher.start()
-
-    def tearDown(self):
-        self.patcher.stop()
+        fake_getpass = mock.Mock(return_value='abcdef')
+        monkeypatch.setattr(getpass, 'getpass', fake_getpass)
 
     def init_keyring(self):
         return file.EncryptedKeyring()
 
     def test_wrong_password(self):
         self.keyring.set_password('system', 'user', 'password')
-        self.patcher.stop()
-        self.mock_getpass('wrong')
+        getpass.getpass.return_value = 'wrong'
         with pytest.raises(ValueError):
             self.keyring._unlock()
-        self.patcher.stop()
-        self.mock_getpass()
 
     @unittest.skipIf(
         sys.platform == 'win32', "Group/World permissions aren't meaningful on Windows"
@@ -193,7 +183,7 @@ class EncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
         self.assertEqual(group_other_perms, 0)
 
 
-class UncryptedFileKeyringTestCase(FileKeyringTests, unittest.TestCase):
+class UncryptedFileKeyringTestCase(FileKeyringTests):
     def init_keyring(self):
         return file.PlaintextKeyring()
 
