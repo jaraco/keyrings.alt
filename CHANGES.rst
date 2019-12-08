@@ -1,3 +1,8 @@
+v3.4.0
+======
+
+In tests, pin keyring major version.
+
 v3.3.0
 ======
 
