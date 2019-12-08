@@ -4,8 +4,7 @@ import sys
 import errno
 import unittest
 import getpass
-
-from six.moves import configparser
+import configparser
 
 import pytest
 from unittest import mock

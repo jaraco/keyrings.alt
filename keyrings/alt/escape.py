@@ -5,14 +5,6 @@ alphanumeric usernames, services, or other values
 
 import re
 import string
-import sys
-
-# True if we are running on Python 3.
-# taken from six.py
-PY3 = sys.version_info[0] == 3
-
-# allow use of unicode literals
-_unichr = chr if PY3 else unichr  # noqa: F821
 
 LEGAL_CHARS = (
     getattr(string, 'letters', None)  # Python 2
@@ -25,7 +17,7 @@ ESCAPE_FMT = "_%02X"
 def _escape_char(c):
     "Single char escape. Return the char, escaped if not already legal"
     if isinstance(c, int):
-        c = _unichr(c)
+        c = chr(c)
     return c if c in LEGAL_CHARS else ESCAPE_FMT % ord(c)
 
 
@@ -39,7 +31,7 @@ def escape(value):
 
 def _unescape_code(regex_match):
     ordinal = int(regex_match.group('code'), 16)
-    return bytes([ordinal]) if PY3 else chr(ordinal)
+    return bytes([ordinal])
 
 
 def unescape(value):

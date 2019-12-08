@@ -9,7 +9,7 @@ from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
 from . import file_base
 
 try:
-    from six.moves import winreg
+    import winreg
 except ImportError:
     pass
 

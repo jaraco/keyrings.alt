@@ -3,9 +3,7 @@ from __future__ import with_statement
 import os
 import abc
 import base64
-
-from six import string_types
-from six.moves import configparser
+import configparser
 
 from keyring.errors import PasswordDeleteError
 from keyring.backend import KeyringBackend
@@ -129,7 +127,7 @@ class Keyring(FileBacked, KeyringBackend):
         if not username:
             # https://github.com/jaraco/keyrings.alt/issues/21
             raise ValueError("Username cannot be blank.")
-        if not isinstance(password, string_types):
+        if not isinstance(password, str):
             raise TypeError("Password should be a unicode string, not bytes.")
         assoc = self._generate_assoc(service, username)
         # encrypt the password
@@ -142,7 +140,7 @@ class Keyring(FileBacked, KeyringBackend):
     def _generate_assoc(self, service, username):
         """Generate tamper resistant bytestring of associated data
         """
-        return (escape_for_ini(service) + '\0' + escape_for_ini(username)).encode()
+        return (escape_for_ini(service) + r'\0' + escape_for_ini(username)).encode()
 
     def _write_config_value(self, service, key, value):
         # ensure the file exists

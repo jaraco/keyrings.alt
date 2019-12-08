@@ -4,8 +4,7 @@ import os
 import sys
 import json
 import getpass
-
-from six.moves import configparser
+import configparser
 
 from keyring.util import properties
 from .escape import escape as escape_for_ini

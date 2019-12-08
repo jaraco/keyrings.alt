@@ -3,8 +3,6 @@ import base64
 import unittest
 import pickle
 
-from six.moves import input
-
 from keyring.tests.test_backend import BackendBasicTests
 from keyrings.alt import Google
 from keyring.credentials import SimpleCredential

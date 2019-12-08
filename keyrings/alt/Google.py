@@ -8,8 +8,6 @@ import base64
 import io
 import pickle
 
-from six.moves import input
-
 try:
     import gdata.docs.service
 except ImportError:

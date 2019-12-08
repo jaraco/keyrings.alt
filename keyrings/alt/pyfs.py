@@ -1,8 +1,7 @@
 import os
 import base64
 import sys
-
-from six.moves import configparser
+import configparser
 
 from keyring import errors
 from .escape import escape as escape_for_ini
