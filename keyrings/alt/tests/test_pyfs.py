@@ -9,7 +9,7 @@ import pytest
 
 import keyring.backend
 from keyrings.alt import pyfs
-from keyring.tests.test_backend import BackendBasicTests, random_string
+from keyring.testing.backend import BackendBasicTests, random_string
 
 
 class ReverseCrypter(keyring.backend.Crypter):

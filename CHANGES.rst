@@ -1,3 +1,8 @@
+v3.5.0
+======
+
+#33: Rely on keyring.testing (keyring 20) for tests.
+
 v3.4.0
 ======
 

@@ -2,8 +2,8 @@ import types
 import sys
 import unittest
 
-from keyring.tests.test_backend import BackendBasicTests
-from keyring.tests.util import NoNoneDictMutator
+from keyring.testing.backend import BackendBasicTests
+from keyring.testing.util import NoNoneDictMutator
 from keyrings.alt import Gnome
 
 
