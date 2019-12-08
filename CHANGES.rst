@@ -1,10 +1,10 @@
 v3.3.0
-=====
+======
 
 Drop support for Python 3.5 and earlier.
 
 v3.2.0
-=====
+======
 
 In tests, rely on pycryptodome instead of pycrypto for improved
 compatibility.
