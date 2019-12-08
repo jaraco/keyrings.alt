@@ -1,3 +1,8 @@
+v3.3.0
+=====
+
+Drop support for Python 3.5 and earlier.
+
 v3.2.0
 =====
 
