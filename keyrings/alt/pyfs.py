@@ -9,14 +9,44 @@ from keyring.util import platform_, properties
 from keyring.backend import KeyringBackend, NullCrypter
 from . import keyczar
 
+# support getting module version
+import pkg_resources
+
+# support parsing version string
+from packaging import version
+
+# check FS version
 try:
-    import fs.opener
-    import fs.osfs
-    import fs.errors
-    import fs.path
-    import fs.remote
+    FS_VER = version.parse(pkg_resources.get_distribution("fs").version)
+except pkg_resources.DistributionNotFound:
+    raise ImportError
+
+import fs.osfs
+import fs.errors
+import fs.path
+
+try:
+    if FS_VER < version.parse("2.0.0"):
+        import fs.remote
+    else:
+        import fs.wrap
 except ImportError:
-    pass
+    print('ERROR: must have either fs.remote or fs.wrap for cacheing.')
+    raise
+
+# now import opener.
+if FS_VER < version.parse("2.0.0"):
+    import fs.opener
+else:
+    from fs import open_fs
+    import fs.opener
+
+
+# change fs related classes and calls
+if FS_VER < version.parse("2.0.0"):
+    fsResourceNotFoundError = fs.errors.ResourceNotFoundError
+else:
+    fsResourceNotFoundError = fs.errors.ResourceNotFound
 
 
 def has_pyfs():
@@ -25,9 +55,7 @@ def has_pyfs():
     Should return False even when Mercurial's Demand Import allowed import of
     fs.*.
     """
-    with errors.ExceptionRaisedContext() as exc:
-        fs.opener.opener
-    return not bool(exc)
+    return FS_VER is not None
 
 
 class BasicKeyring(KeyringBackend):
@@ -47,23 +75,71 @@ class BasicKeyring(KeyringBackend):
     def __init__(self, crypter, filename=None, can_create=True, cache_timeout=None):
         super(BasicKeyring, self).__init__()
         self._crypter = crypter
-        def_fn = os.path.join(platform_.data_root(), self.__class__._filename)
-        self._filename = filename or def_fn
+        if filename is None:
+            self._filename = os.path.join(
+                platform_.data_root(), self.__class__._filename
+            )
+        elif filename.endswith("/"):
+            self._filename = os.path.join(filename, self.__class__._filename)
+        else:
+            self._filename = filename
         self._can_create = can_create
         self._cache_timeout = cache_timeout
+        # open the fs for the session.  this in particular is for the
+        # transient fs types, like tempfs, memfs, and any other where reopening
+        # creates a new store.
+        # print(
+        #     "Opening file {}, filename {} at path {}".format(
+        #         self._filename, self.filename, self.file_path
+        #     )
+        # )
+        self._pyfs = None
+        if FS_VER < version.parse("2.0.0"):
+            # pre-2.0 version of memoryfs does not handle create_dir flag properly.
+            # with nested subdir with more than 2 levels, cause the inner most subdir
+            # creation to fail with "no parent" message.
+            if self._filename.startswith("mem://") or self._filename.startswith(
+                "ram://"
+            ):
+                self._pyfs = fs.opener.fsopendir(self.file_path, writeable=True)
+            else:
+                self._pyfs = fs.opener.fsopendir(
+                    self.file_path, writeable=True, create_dir=self._can_create
+                )
+            # cache if permitted
+            if self._cache_timeout is not None:
+                self._pyfs = fs.remote.CacheFS(
+                    self._pyfs, cache_timeout=self._cache_timeout
+                )
+        else:
+            self._pyfs = open_fs(
+                self.file_path, writeable=True, create=self._can_create
+            )
+            # cache if permitted
+            if self._cache_timeout is not None:
+                self._pyfs = fs.wrap.cache_directory(self._pyfs)
+
+    def __del__(self):
+        if hasattr(self, '_pyfs') and self._pyfs is not None:
+            self._pyfs.close()
+            self._pyfs = None
 
     @properties.NonDataProperty
     def file_path(self):
         """
-        The path to the file where passwords are stored. This property
-        may be overridden by the subclass or at the instance level.
+        The path to the directory where password file resides.
         """
-        return os.path.join(platform_.data_root(), self.filename)
+        # handle the case of os://file
+        # (os.path.split results in os:/  and file.  add back the "/")
+        p = self._filename.rsplit("/", 1)[0]
+        if p.endswith("/"):
+            p = p + "/"
+        return p
 
-    @property
+    @properties.NonDataProperty
     def filename(self):
         """The filename used to store the passwords."""
-        return self._filename
+        return os.path.basename(self._filename)
 
     def encrypt(self, password):
         """Encrypt the password."""
@@ -81,69 +157,13 @@ class BasicKeyring(KeyringBackend):
         """Open the password file in the specified mode"""
         open_file = None
         writeable = 'w' in mode or 'a' in mode or '+' in mode
+        assert self._pyfs is not None
         try:
-            # NOTE: currently the MemOpener does not split off any filename
-            #       which causes errors on close()
-            #       so we add a dummy name and open it separately
-            if self.filename.startswith('mem://') or self.filename.startswith('ram://'):
-                open_file = fs.opener.fsopendir(self.filename).open('kr.cfg', mode)
-            else:
-                if not hasattr(self, '_pyfs'):
-                    # reuse the pyfilesystem and path
-                    self._pyfs, self._path = fs.opener.opener.parse(
-                        self.filename, writeable=writeable
-                    )
-                    # cache if permitted
-                    if self._cache_timeout is not None:
-                        self._pyfs = fs.remote.CacheFS(
-                            self._pyfs, cache_timeout=self._cache_timeout
-                        )
-                open_file = self._pyfs.open(self._path, mode)
-        except fs.errors.ResourceNotFoundError:
-            if self._can_create:
-                segments = fs.opener.opener.split_segments(self.filename)
-                if segments:
-                    # this seems broken, but pyfilesystem uses it, so we must
-                    fs_name, credentials, url1, url2, path = segments.groups()
-                    assert fs_name, 'Should be a remote filesystem'
-                    host = ''
-                    # allow for domain:port
-                    if ':' in url2:
-                        split_url2 = url2.split('/', 1)
-                        if len(split_url2) > 1:
-                            url2 = split_url2[1]
-                        else:
-                            url2 = ''
-                        host = split_url2[0]
-                    pyfs = fs.opener.opener.opendir('%s://%s' % (fs_name, host))
-                    # cache if permitted
-                    if self._cache_timeout is not None:
-                        pyfs = fs.remote.CacheFS(
-                            pyfs, cache_timeout=self._cache_timeout
-                        )
-                    # NOTE: fs.path.split does not function in the same
-                    # way os os.path.split... at least under windows
-                    url2_path, url2_filename = os.path.split(url2)
-                    if url2_path and not pyfs.exists(url2_path):
-                        pyfs.makedir(url2_path, recursive=True)
-                else:
-                    # assume local filesystem
-                    full_url = fs.opener._expand_syspath(self.filename)
-                    # NOTE: fs.path.split does not function in the same
-                    # way os os.path.split... at least under windows
-                    url2_path, url2 = os.path.split(full_url)
-                    pyfs = fs.osfs.OSFS(url2_path)
-
-                try:
-                    # reuse the pyfilesystem and path
-                    self._pyfs = pyfs
-                    self._path = url2
-                    return pyfs.open(url2, mode)
-                except fs.errors.ResourceNotFoundError:
-                    if writeable:
-                        raise
-                    else:
-                        pass
+            # file system is already open.  here, just file is opened.
+            open_file = self._pyfs.open(self.filename, mode)
+        except fsResourceNotFoundError:
+            # also, since we allow directory creation,
+            # the resoruce not found exception applies onlty to the file.
             # NOTE: ignore read errors as the underlying caller can fail safely
             if writeable:
                 raise
@@ -213,6 +233,7 @@ class BasicKeyring(KeyringBackend):
     @properties.ClassProperty
     @classmethod
     def priority(cls):
+        """ Determines the viability of this backend """
         if not has_pyfs():
             raise RuntimeError("pyfs required")
         return 2
@@ -245,6 +266,8 @@ if sys.version_info > (3,):
 class PlaintextKeyring(BasicKeyring):
     """Unencrypted Pyfilesystem Keyring"""
 
+    _filename = 'uncrypted_pyf_pass.cfg'
+
     def __init__(self, filename=None, can_create=True, cache_timeout=None):
         super(PlaintextKeyring, self).__init__(
             NullCrypter(),
@@ -252,6 +275,9 @@ class PlaintextKeyring(BasicKeyring):
             can_create=can_create,
             cache_timeout=cache_timeout,
         )
+
+    def __del__(self):
+        super(PlaintextKeyring, self).__del__()
 
 
 class EncryptedKeyring(BasicKeyring):
@@ -267,6 +293,9 @@ class EncryptedKeyring(BasicKeyring):
             cache_timeout=cache_timeout,
         )
 
+    def __del__(self):
+        super(EncryptedKeyring, self).__del__()
+
 
 class KeyczarKeyring(EncryptedKeyring):
     """Encrypted Pyfilesystem Keyring using Keyczar keysets specified in
@@ -275,3 +304,6 @@ class KeyczarKeyring(EncryptedKeyring):
 
     def __init__(self):
         super(KeyczarKeyring, self).__init__(keyczar.EnvironCrypter())
+
+    def __del__(self):
+        super(KeyczarKeyring, self).__del__()
