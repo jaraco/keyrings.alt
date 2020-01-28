@@ -23,11 +23,6 @@ class FileKeyringTests(BackendBasicTests):
     def _init_properties_for_file(self):
         self.keyring.file_path = tempfile.mktemp()
         yield
-        # not using yield because BackendBasicTests is using a finalizer list.
-        # mixing them makes it hard to enforce order.
-        # (this finalizer still appears to be called before super's)
-        # request.addfinalizer(self.file_cleanup)
-        # yield may be okay after all.
 
     @pytest.fixture(autouse=True)
     def _cleanup_for_file(self):

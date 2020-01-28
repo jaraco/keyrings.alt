@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from keyrings.alt import Windows
-from keyring.testing.backend import BackendBasicTests
+from .backend import BackendBasicTests
 from .test_file import FileKeyringTests
 
 
