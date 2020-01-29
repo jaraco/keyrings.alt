@@ -5,7 +5,7 @@ import sys
 import pytest
 
 from keyrings.alt import Windows
-from .backend import BackendBasicTests
+from .backend import BackendFileTests
 from .test_file import FileKeyringTests
 
 
@@ -27,6 +27,6 @@ class TestWin32CryptoKeyring(FileKeyringTests):
     not Windows.RegistryKeyring.viable or sys.version_info < (3,),
     reason="RegistryKeyring not viable",
 )
-class TestRegistryKeyring(BackendBasicTests):
+class TestRegistryKeyring(BackendFileTests):
     def init_keyring(self):
         return Windows.RegistryKeyring()

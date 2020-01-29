@@ -8,7 +8,7 @@ import configparser
 import pytest
 from unittest import mock
 
-from .backend import BackendBasicTests
+from .backend import BackendFileTests
 from keyring.testing.util import random_string
 
 from keyrings.alt import file
@@ -18,7 +18,7 @@ from keyrings.alt.escape import escape as escape_for_ini
 from keyring.errors import PasswordDeleteError
 
 
-class FileKeyringTests(BackendBasicTests):
+class FileKeyringTests(BackendFileTests):
     @pytest.fixture(autouse=True)
     def _init_properties_for_file(self):
         self.keyring.file_path = tempfile.mktemp()

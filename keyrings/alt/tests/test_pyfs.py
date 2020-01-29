@@ -9,7 +9,8 @@ import pytest
 
 import keyring.backend
 from keyrings.alt import pyfs
-from keyring.testing.backend import BackendBasicTests, random_string
+from .backend import BackendFileTests
+from keyring.testing.util import random_string
 
 
 class ReverseCrypter(keyring.backend.Crypter):
@@ -22,7 +23,7 @@ class ReverseCrypter(keyring.backend.Crypter):
         return value[::-1]
 
 
-class PyfilesystemKeyringTests(BackendBasicTests):
+class PyfilesystemKeyringTests(BackendFileTests):
     """Base class for Pyfilesystem tests"""
 
     def test_encrypt_decrypt(self):
