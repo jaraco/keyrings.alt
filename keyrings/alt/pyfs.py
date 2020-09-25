@@ -238,7 +238,7 @@ class UnicodeWriterAdapter(object):
 
 if sys.version_info > (3,):
 
-    def UnicodeWriterAdapter(x):  # noqa
+    def UnicodeWriterAdapter(x):  # type: ignore # noqa
         return x
 
 

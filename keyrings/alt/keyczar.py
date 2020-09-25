@@ -8,7 +8,7 @@ try:
 except ImportError:
     pass
 
-from keyring.backend import Crypter
+import keyring.backend
 from keyring import errors
 
 
@@ -18,7 +18,7 @@ def has_keyczar():
     return not bool(exc)
 
 
-class BaseCrypter(Crypter):
+class BaseCrypter(keyring.backend.Crypter):
     """Base Keyczar keyset encryption and decryption.
     The keyset initialisation is deferred until required.
     """
