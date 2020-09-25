@@ -1,7 +1,13 @@
 .. image:: https://img.shields.io/pypi/v/keyrings.alt.svg
-   :target: https://pypi.org/project/keyrings.alt
+   :target: `PyPI link`_
 
 .. image:: https://img.shields.io/pypi/pyversions/keyrings.alt.svg
+   :target: `PyPI link`_
+
+.. _PyPI link: https://pypi.org/project/keyrings.alt
+
+.. image:: https://dev.azure.com/jaraco/keyrings.alt/_apis/build/status/jaraco.keyrings.alt?branchName=master
+   :target: https://dev.azure.com/jaraco/keyrings.alt/_build/latest?definitionId=1&branchName=master
 
 .. image:: https://img.shields.io/travis/jaraco/keyrings.alt/master.svg
    :target: https://travis-ci.org/jaraco/keyrings.alt
