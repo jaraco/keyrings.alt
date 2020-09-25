@@ -2,23 +2,13 @@ from __future__ import with_statement
 
 import os
 import abc
-import base64
 import configparser
+from base64 import encodebytes, decodebytes
 
 from keyring.errors import PasswordDeleteError
 from keyring.backend import KeyringBackend
 from keyring.util import platform_, properties
 from .escape import escape as escape_for_ini
-
-try:
-    encodebytes = base64.encodebytes
-except AttributeError:  # pragma: no cover
-    encodebytes = base64.encodestring
-
-try:
-    decodebytes = base64.decodebytes
-except AttributeError:  # pragma: no cover
-    decodebytes = base64.decodestring
 
 
 class FileBacked(object):

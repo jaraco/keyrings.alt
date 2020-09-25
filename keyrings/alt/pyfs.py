@@ -171,7 +171,7 @@ class BasicKeyring(KeyringBackend):
         try:
             password_base64 = self.config.get(service, username).encode()
             # decode with base64
-            password_encrypted = base64.decodestring(password_base64)
+            password_encrypted = base64.decodebytes(password_base64)
             # decrypted the password
             password = self.decrypt(password_encrypted).decode('utf-8')
         except (configparser.NoOptionError, configparser.NoSectionError):
@@ -188,7 +188,7 @@ class BasicKeyring(KeyringBackend):
         password_encrypted = self.encrypt(password.encode('utf-8'))
 
         # encode with base64
-        password_base64 = base64.encodestring(password_encrypted).decode()
+        password_base64 = base64.encodebytes(password_encrypted).decode()
         # write the modification
         if not self.config.has_section(service):
             self.config.add_section(service)

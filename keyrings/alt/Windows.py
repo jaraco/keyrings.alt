@@ -91,7 +91,7 @@ class RegistryKeyring(KeyringBackend):
             password_saved = winreg.QueryValueEx(hkey, username)[0]
             password_base64 = password_saved.encode('ascii')
             # decode with base64
-            password_encrypted = base64.decodestring(password_base64)
+            password_encrypted = base64.decodebytes(password_base64)
             # decrypted the password
             password = _win_crypto.decrypt(password_encrypted).decode('utf-8')
         except EnvironmentError:
@@ -103,7 +103,7 @@ class RegistryKeyring(KeyringBackend):
         # encrypt the password
         password_encrypted = _win_crypto.encrypt(password.encode('utf-8'))
         # encode with base64
-        password_base64 = base64.encodestring(password_encrypted)
+        password_base64 = base64.encodebytes(password_encrypted)
         # encode again to unicode
         password_saved = password_base64.decode('ascii')
 
