@@ -1,3 +1,9 @@
+v3.5.2
+======
+
+#39: Replace use of deprecated ``base64.encode/decodestring``
+with ``encode/decodebytes``.
+
 v3.5.1
 ======
 
