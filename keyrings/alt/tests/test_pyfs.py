@@ -38,6 +38,7 @@ class PyFSBackend(BackendBasicTests):
 
 class TestUnencryptedMemoryPyfilesystemKeyringNoSubDir(PyFSBackend):
     """Test in memory with no encryption"""
+
     keyring_filename = 'mem://unencrypted'
 
 

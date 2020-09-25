@@ -62,27 +62,23 @@ class BasicKeyring(KeyringBackend):
 
     @property
     def filename(self):
-        """The filename used to store the passwords.
-        """
+        """The filename used to store the passwords."""
         return self._filename
 
     def encrypt(self, password):
-        """Encrypt the password.
-        """
+        """Encrypt the password."""
         if not password or not self._crypter:
             return password or b''
         return self._crypter.encrypt(password)
 
     def decrypt(self, password_encrypted):
-        """Decrypt the password.
-        """
+        """Decrypt the password."""
         if not password_encrypted or not self._crypter:
             return password_encrypted or b''
         return self._crypter.decrypt(password_encrypted)
 
     def _open(self, mode='r'):
-        """Open the password file in the specified mode
-        """
+        """Open the password file in the specified mode"""
         open_file = None
         writeable = 'w' in mode or 'a' in mode or '+' in mode
         try:
@@ -157,8 +153,7 @@ class BasicKeyring(KeyringBackend):
 
     @property
     def config(self):
-        """load the passwords from the config file
-        """
+        """load the passwords from the config file"""
         if not hasattr(self, '_config'):
             raw_config = configparser.RawConfigParser()
             f = self._open()
@@ -169,8 +164,7 @@ class BasicKeyring(KeyringBackend):
         return self._config
 
     def get_password(self, service, username):
-        """Read the password from the file.
-        """
+        """Read the password from the file."""
         service = escape_for_ini(service)
         username = escape_for_ini(username)
 
@@ -186,8 +180,7 @@ class BasicKeyring(KeyringBackend):
         return password
 
     def set_password(self, service, username, password):
-        """Write the password in the file.
-        """
+        """Write the password in the file."""
         service = escape_for_ini(service)
         username = escape_for_ini(username)
 
@@ -250,8 +243,7 @@ if sys.version_info > (3,):
 
 
 class PlaintextKeyring(BasicKeyring):
-    """Unencrypted Pyfilesystem Keyring
-    """
+    """Unencrypted Pyfilesystem Keyring"""
 
     def __init__(self, filename=None, can_create=True, cache_timeout=None):
         super(PlaintextKeyring, self).__init__(
@@ -263,8 +255,7 @@ class PlaintextKeyring(BasicKeyring):
 
 
 class EncryptedKeyring(BasicKeyring):
-    """Encrypted Pyfilesystem Keyring
-    """
+    """Encrypted Pyfilesystem Keyring"""
 
     _filename = 'crypted_pyf_pass.cfg'
 

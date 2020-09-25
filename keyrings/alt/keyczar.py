@@ -20,7 +20,7 @@ def has_keyczar():
 
 class BaseCrypter(Crypter):
     """Base Keyczar keyset encryption and decryption.
-       The keyset initialisation is deferred until required.
+    The keyset initialisation is deferred until required.
     """
 
     @abc.abstractproperty
@@ -31,7 +31,7 @@ class BaseCrypter(Crypter):
     @abc.abstractproperty
     def encrypting_keyset_location(self):
         """Location for the encrypting keyset.
-           Use None to indicate that the main keyset is not encrypted
+        Use None to indicate that the main keyset is not encrypted
         """
         pass
 
@@ -52,23 +52,20 @@ class BaseCrypter(Crypter):
         return self._crypter
 
     def encrypt(self, value):
-        """Encrypt the value.
-        """
+        """Encrypt the value."""
         if not value:
             return ''
         return self.crypter.Encrypt(value)
 
     def decrypt(self, value):
-        """Decrypt the value.
-        """
+        """Decrypt the value."""
         if not value:
             return ''
         return self.crypter.Decrypt(value)
 
 
 class Crypter(BaseCrypter):
-    """A Keyczar crypter using locations specified in the constructor
-    """
+    """A Keyczar crypter using locations specified in the constructor"""
 
     def __init__(self, keyset_location, encrypting_keyset_location=None):
         self._keyset_location = keyset_location
@@ -84,8 +81,7 @@ class Crypter(BaseCrypter):
 
 
 class EnvironCrypter(BaseCrypter):
-    """A Keyczar crypter using locations specified by environment vars
-    """
+    """A Keyczar crypter using locations specified by environment vars"""
 
     KEYSET_ENV_VAR = 'KEYRING_KEYCZAR_ENCRYPTED_LOCATION'
     ENC_KEYSET_ENV_VAR = 'KEYRING_KEYCZAR_ENCRYPTING_LOCATION'
