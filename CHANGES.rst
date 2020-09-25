@@ -1,3 +1,10 @@
+v3.5.1
+======
+
+#38: Fixed test suite to work with pytest-based fixtures.
+
+Refresh package metadata.
+
 v3.5.0
 ======
 
