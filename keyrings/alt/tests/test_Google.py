@@ -336,7 +336,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
 
     def test_handles_broken_google_put_when_non_owner_update_fails(self):
         """Google Docs has a bug when putting to a non-owner
-           see  GoogleDocsKeyring._save_keyring()
+        see  GoogleDocsKeyring._save_keyring()
         """
         import gdata
 
@@ -373,7 +373,7 @@ class GoogleDocsKeyringInteractionTestCase(unittest.TestCase):
 
     def test_handles_broken_google_put_when_non_owner_update(self):
         """Google Docs has a bug when putting to a non-owner
-           see  GoogleDocsKeyring._save_keyring()
+        see  GoogleDocsKeyring._save_keyring()
         """
         import gdata
 

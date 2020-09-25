@@ -22,8 +22,7 @@ from keyring.errors import ExceptionRaisedContext
 
 
 class EnvironCredential(credentials.EnvironCredential):
-    """Retrieve credentials from specifically named environment variables
-    """
+    """Retrieve credentials from specifically named environment variables"""
 
     def __init__(self):
         super(EnvironCredential, self).__init__(
@@ -33,9 +32,9 @@ class EnvironCredential(credentials.EnvironCredential):
 
 class DocsKeyring(KeyringBackend):
     """Backend that stores keyring on Google Docs.
-       Note that login and any other initialisation is deferred until it is
-       actually required to allow this keyring class to be added to the
-       global _all_keyring list.
+    Note that login and any other initialisation is deferred until it is
+    actually required to allow this keyring class to be added to the
+    global _all_keyring list.
     """
 
     keyring_title = 'GoogleKeyring'
@@ -87,16 +86,14 @@ class DocsKeyring(KeyringBackend):
         return not bool(exc)
 
     def get_password(self, service, username):
-        """Get password of the username for the service
-        """
+        """Get password of the username for the service"""
         result = self._get_entry(self._keyring, service, username)
         if result:
             result = self._decrypt(result)
         return result
 
     def set_password(self, service, username, password):
-        """Set password for the username of the service
-        """
+        """Set password for the username of the service"""
         password = self._encrypt(password or '')
         keyring_working_copy = copy.deepcopy(self._keyring)
         service_entries = keyring_working_copy.get(service)

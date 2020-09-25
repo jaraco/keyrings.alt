@@ -51,13 +51,11 @@ class EncryptedKeyring(file_base.Keyring):
     filename = 'wincrypto_pass.cfg'
 
     def encrypt(self, password, assoc=None):
-        """Encrypt the password using the CryptAPI.
-        """
+        """Encrypt the password using the CryptAPI."""
         return _win_crypto.encrypt(password)
 
     def decrypt(self, password_encrypted, assoc=None):
-        """Decrypt the password using the CryptAPI.
-        """
+        """Decrypt the password using the CryptAPI."""
         return _win_crypto.decrypt(password_encrypted)
 
 
@@ -85,8 +83,7 @@ class RegistryKeyring(KeyringBackend):
         return r'Software\{escaped}\Keyring'.format(**locals())
 
     def get_password(self, service, username):
-        """Get password of the username for the service
-        """
+        """Get password of the username for the service"""
         try:
             # fetch the password
             key = self._key_for_service(service)
@@ -102,8 +99,7 @@ class RegistryKeyring(KeyringBackend):
         return password
 
     def set_password(self, service, username, password):
-        """Write the password to the registry
-        """
+        """Write the password to the registry"""
         # encrypt the password
         password_encrypted = _win_crypto.encrypt(password.encode('utf-8'))
         # encode with base64
@@ -117,8 +113,7 @@ class RegistryKeyring(KeyringBackend):
         winreg.SetValueEx(hkey, username, 0, winreg.REG_SZ, password_saved)
 
     def delete_password(self, service, username):
-        """Delete the password for the username of the service.
-        """
+        """Delete the password for the username of the service."""
         try:
             key_name = self._key_for_service(service)
             hkey = winreg.OpenKey(

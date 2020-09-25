@@ -36,8 +36,7 @@ class Keyring(KeyringBackend):
         return self.KEYRING_NAME or system_default
 
     def _find_passwords(self, service, username, deleting=False):
-        """Get password of the username for the service
-        """
+        """Get password of the username for the service"""
         passwords = []
 
         service = self._safe_string(service)
@@ -59,8 +58,7 @@ class Keyring(KeyringBackend):
         return passwords
 
     def get_password(self, service, username):
-        """Get password of the username for the service
-        """
+        """Get password of the username for the service"""
         items = self._find_passwords(service, username)
         if not items:
             return None
@@ -69,8 +67,7 @@ class Keyring(KeyringBackend):
         return secret if isinstance(secret, str) else secret.decode('utf-8')
 
     def set_password(self, service, username, password):
-        """Set password for the username of the service
-        """
+        """Set password for the username of the service"""
         service = self._safe_string(service)
         username = self._safe_string(username)
         password = self._safe_string(password)
@@ -95,8 +92,7 @@ class Keyring(KeyringBackend):
             raise PasswordSetError(result.value_name)
 
     def delete_password(self, service, username):
-        """Delete the password for the username of the service.
-        """
+        """Delete the password for the username of the service."""
         items = self._find_passwords(service, username, deleting=True)
         if not items:
             raise PasswordDeleteError("Password not found")

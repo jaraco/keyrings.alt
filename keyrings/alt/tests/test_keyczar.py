@@ -21,8 +21,7 @@ class KeyczarCrypterTestCase(unittest.TestCase):
             del os.environ[keyczar.EnvironCrypter.ENC_KEYSET_ENV_VAR]
 
     def testKeyczarCrypterWithUnencryptedReader(self):
-        """
-        """
+        """"""
         location = 'bar://baz'
         kz_crypter = keyczar.Crypter(location)
         self.assertEqual(location, kz_crypter.keyset_location)
@@ -32,8 +31,7 @@ class KeyczarCrypterTestCase(unittest.TestCase):
         self.assertEqual(location, kz_crypter.crypter.reader.location)
 
     def testKeyczarCrypterWithEncryptedReader(self):
-        """
-        """
+        """"""
         location = 'foo://baz'
         encrypting_location = 'castle://aaargh'
         kz_crypter = keyczar.Crypter(location, encrypting_location)

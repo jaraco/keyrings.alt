@@ -1,5 +1,4 @@
 import getpass
-import unittest
 from unittest import mock
 
 import pytest
@@ -19,8 +18,8 @@ def is_crypto_supported():
     return True
 
 
-@unittest.skipUnless(is_crypto_supported(), "Need Crypto module")
-class CryptedFileKeyringTestCase(FileKeyringTests):
+@pytest.mark.skipif(not is_crypto_supported(), reason="Need Crypto module")
+class TestCryptedFileKeyring(FileKeyringTests):
     @pytest.fixture(autouse=True)
     def mocked_getpass(self, monkeypatch):
         fake_getpass = mock.Mock(return_value='abcdef')

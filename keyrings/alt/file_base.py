@@ -122,8 +122,7 @@ class Keyring(FileBacked, KeyringBackend):
         return password
 
     def set_password(self, service, username, password):
-        """Write the password in the file.
-        """
+        """Write the password in the file."""
         if not username:
             # https://github.com/jaraco/keyrings.alt/issues/21
             raise ValueError("Username cannot be blank.")
@@ -138,8 +137,7 @@ class Keyring(FileBacked, KeyringBackend):
         self._write_config_value(service, username, password_base64)
 
     def _generate_assoc(self, service, username):
-        """Generate tamper resistant bytestring of associated data
-        """
+        """Generate tamper resistant bytestring of associated data"""
         return (escape_for_ini(service) + r'\0' + escape_for_ini(username)).encode()
 
     def _write_config_value(self, service, key, value):
@@ -179,8 +177,7 @@ class Keyring(FileBacked, KeyringBackend):
             os.chmod(self.file_path, user_read_write)
 
     def delete_password(self, service, username):
-        """Delete the password for the username of the service.
-        """
+        """Delete the password for the username of the service."""
         service = escape_for_ini(service)
         username = escape_for_ini(username)
         config = configparser.RawConfigParser()
