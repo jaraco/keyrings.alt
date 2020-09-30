@@ -157,7 +157,7 @@ class FileKeyringTests(BackendBasicTests):
 class TestEncryptedFileKeyring(FileKeyringTests):
     @pytest.fixture(autouse=True)
     def crypt_fixture(self, monkeypatch):
-        pytest.importorskip('Crypto')
+        pytest.importorskip('Cryptodome')
         fake_getpass = mock.Mock(return_value='abcdef')
         monkeypatch.setattr(getpass, 'getpass', fake_getpass)
 
