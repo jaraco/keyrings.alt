@@ -33,7 +33,7 @@ class PlaintextKeyring(Keyring):
 
 class Encrypted(object):
     """
-    PyCrypto-backed Encryption support
+    PyCryptodome-backed Encryption support
     """
 
     scheme = '[PBKDF2] AES256.CFB'
@@ -44,8 +44,8 @@ class Encrypted(object):
         """
         Create the cipher object to encrypt or decrypt a payload.
         """
-        from Crypto.Protocol.KDF import PBKDF2
-        from Crypto.Cipher import AES
+        from Cryptodome.Protocol.KDF import PBKDF2
+        from Cryptodome.Cipher import AES
 
         pw = PBKDF2(password, salt, dkLen=self.block_size)
         return AES.new(pw[: self.block_size], AES.MODE_CFB, IV)
@@ -65,7 +65,7 @@ class Encrypted(object):
 
 
 class EncryptedKeyring(Encrypted, Keyring):
-    """PyCrypto File Keyring"""
+    """PyCryptodome File Keyring"""
 
     filename = 'crypted_pass.cfg'
     pw_prefix = 'pw:'.encode()
@@ -75,11 +75,11 @@ class EncryptedKeyring(Encrypted, Keyring):
     def priority(self):
         "Applicable for all platforms, but not recommended."
         try:
-            __import__('Crypto.Cipher.AES')
-            __import__('Crypto.Protocol.KDF')
-            __import__('Crypto.Random')
+            __import__('Cryptodome.Cipher.AES')
+            __import__('Cryptodome.Protocol.KDF')
+            __import__('Cryptodome.Random')
         except ImportError:  # pragma: no cover
-            raise RuntimeError("PyCrypto required")
+            raise RuntimeError("pycryptodomex required")
         if not json:  # pragma: no cover
             raise RuntimeError("JSON implementation such as simplejson required.")
         return 0.6
@@ -190,10 +190,10 @@ class EncryptedKeyring(Encrypted, Keyring):
 
     def encrypt(self, password, assoc=None):
         # encrypt password, ignore associated data
-        from Crypto.Random import get_random_bytes
+        from Cryptodome.Random import get_random_bytes
 
         salt = get_random_bytes(self.block_size)
-        from Crypto.Cipher import AES
+        from Cryptodome.Cipher import AES
 
         IV = get_random_bytes(AES.block_size)
         cipher = self._create_cipher(self.keyring_key, salt, IV)
