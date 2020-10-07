@@ -1,3 +1,9 @@
+v4.0.0
+======
+
+#41: Instead of PyCrypto or PyCryptodome, the encrypting backend
+now relies on PyCryptodomex.
+
 v3.5.2
 ======
 
