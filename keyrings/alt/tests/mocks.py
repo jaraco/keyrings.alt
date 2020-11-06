@@ -7,14 +7,14 @@ import io
 import pickle
 
 
-class MockAtom(object):
+class MockAtom:
     """ Mocks an atom in the GData service. """
 
     def __init__(self, value):
         self.text = value
 
 
-class MockEntry(object):
+class MockEntry:
     """ Mocks and entry returned from the GData service. """
 
     def __init__(self, title, ID):
@@ -26,14 +26,14 @@ class MockEntry(object):
         return MockLink()
 
 
-class MockHTTPClient(object):
+class MockHTTPClient:
     """ Mocks the functionality of an http client. """
 
     def request(*args, **kwargs):
         pass
 
 
-class MockGDataService(object):
+class MockGDataService:
     """ Provides the common functionality of a Google Service. """
 
     http_client = MockHTTPClient()
@@ -170,14 +170,14 @@ class MockDocumentService(MockGDataService):
             return MockHttpResponse(self._request_response)
 
 
-class MockHttpResponse(io.BytesIO, object):
+class MockHttpResponse(io.BytesIO):
     def __init__(self, response_dict):
         super(MockHttpResponse, self).__init__(response_dict.get('data', ''))
         self.status = response_dict.get('status', 200)
         self.reason = response_dict.get('reason', '')
 
 
-class MockListFeed(object):
+class MockListFeed:
     @property
     def entry(self):
         if hasattr(self, '_entry'):
@@ -185,23 +185,23 @@ class MockListFeed(object):
         return []
 
 
-class MockListEntry(object):
+class MockListEntry:
     pass
 
 
-class MockLink(object):
+class MockLink:
     @property
     def href(self):
         return ''
 
 
-class MockContent(object):
+class MockContent:
     @property
     def src(self):
         return 'src'
 
 
-class MockDocumentListEntry(object):
+class MockDocumentListEntry:
     @property
     def content(self):
         return MockContent()
@@ -210,18 +210,18 @@ class MockDocumentListEntry(object):
         return MockLink()
 
 
-class MockKeyczarReader(object):
+class MockKeyczarReader:
     def __init__(self, location):
         self.location = location
 
 
-class MockKeyczarEncryptedReader(object):
+class MockKeyczarEncryptedReader:
     def __init__(self, reader, crypter):
         self._reader = reader
         self._crypter = crypter
 
 
-class MockKeyczarReaders(object):
+class MockKeyczarReaders:
     @staticmethod
     def CreateReader(location):
         return MockKeyczarReader(location)
@@ -231,7 +231,7 @@ class MockKeyczarReaders(object):
         return MockKeyczarEncryptedReader(reader, crypter)
 
 
-class MockKeyczarCrypter(object):
+class MockKeyczarCrypter:
     def __init__(self, reader):
         self.reader = reader
 
@@ -240,7 +240,7 @@ class MockKeyczarCrypter(object):
         return MockKeyczarCrypter(MockKeyczarReader(location))
 
 
-class MockKeyczar(object):
+class MockKeyczar:
     @property
     def readers(self):
         return MockKeyczarReaders
