@@ -155,10 +155,7 @@ class BasicKeyring(KeyringBackend):
         """load the passwords from the config file"""
         if not hasattr(self, '_config'):
             raw_config = configparser.RawConfigParser()
-            f = self._open()
-            if f:
-                raw_config.readfp(f)
-                f.close()
+            raw_config.read_file(self._open() or [])
             self._config = raw_config
         return self._config
 
