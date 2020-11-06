@@ -11,7 +11,7 @@ from keyring.util import platform_, properties
 from .escape import escape as escape_for_ini
 
 
-class FileBacked(object):
+class FileBacked:
     @abc.abstractproperty
     def filename(self):
         """

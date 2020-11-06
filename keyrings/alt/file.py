@@ -31,7 +31,7 @@ class PlaintextKeyring(Keyring):
         return password_encrypted
 
 
-class Encrypted(object):
+class Encrypted:
     """
     PyCryptodome-backed Encryption support
     """

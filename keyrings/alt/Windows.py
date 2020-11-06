@@ -149,7 +149,7 @@ class RegistryKeyring(KeyringBackend):
             key_name = parent
 
 
-class OldPywinError(object):
+class OldPywinError:
     """
     A compatibility wrapper for old PyWin32 errors, such as reported in
     https://bitbucket.org/kang/python-keyring-lib/issue/140/
