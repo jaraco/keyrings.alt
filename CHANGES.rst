@@ -1,7 +1,12 @@
+v4.0.2
+======
+
+#43: Tests are no longer included in the install.
+
 v4.0.1
 ======
 
-* Package refresh and minor cleanup.
+Package refresh and minor cleanup.
 
 v4.0.0
 ======
