@@ -6,16 +6,19 @@
 
 .. _PyPI link: https://pypi.org/project/keyrings.alt
 
-.. image:: https://github.com/jaraco/keyrings.alt/workflows/Automated%20Tests/badge.svg
-   :target: https://github.com/jaraco/keyrings.alt/actions?query=workflow%3A%22Automated+Tests%22
-   :alt: Automated Tests
+.. image:: https://github.com/jaraco/keyrings.alt/workflows/tests/badge.svg
+   :target: https://github.com/jaraco/keyrings.alt/actions?query=workflow%3A%22tests%22
+   :alt: tests
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
    :alt: Code style: Black
 
-.. .. image:: https://readthedocs.org/projects/keyringsalt/badge/?version=latest
-..    :target: https://keyringsalt.readthedocs.io/en/latest/?badge=latest
+.. .. image:: https://readthedocs.org/projects/skeleton/badge/?version=latest
+..    :target: https://skeleton.readthedocs.io/en/latest/?badge=latest
+
+.. image:: https://img.shields.io/badge/skeleton-2021-informational
+   :target: https://blog.jaraco.com/skeleton
 
 Alternate keyring backend implementations for use with the
 `keyring package <https://pypi.python.org/pypi/keyring>`_.
