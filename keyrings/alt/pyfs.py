@@ -121,9 +121,7 @@ class BasicKeyring(KeyringBackend):
             pyfs = fs.opener.opener.opendir('%s://%s' % (fs_name, host))
             # cache if permitted
             if self._cache_timeout is not None:
-                pyfs = fs.remote.CacheFS(
-                    pyfs, cache_timeout=self._cache_timeout
-                )
+                pyfs = fs.remote.CacheFS(pyfs, cache_timeout=self._cache_timeout)
             # NOTE: fs.path.split does not function in the same
             # way os os.path.split... at least under windows
             url2_path, url2_filename = os.path.split(url2)
