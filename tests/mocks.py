@@ -8,14 +8,14 @@ import pickle
 
 
 class MockAtom:
-    """ Mocks an atom in the GData service. """
+    """Mocks an atom in the GData service."""
 
     def __init__(self, value):
         self.text = value
 
 
 class MockEntry:
-    """ Mocks and entry returned from the GData service. """
+    """Mocks and entry returned from the GData service."""
 
     def __init__(self, title, ID):
         self.title = MockAtom(title)
@@ -27,14 +27,14 @@ class MockEntry:
 
 
 class MockHTTPClient:
-    """ Mocks the functionality of an http client. """
+    """Mocks the functionality of an http client."""
 
     def request(*args, **kwargs):
         pass
 
 
 class MockGDataService:
-    """ Provides the common functionality of a Google Service. """
+    """Provides the common functionality of a Google Service."""
 
     http_client = MockHTTPClient()
 
@@ -53,7 +53,7 @@ class MockGDataService:
         http_client=None,
         token_store=None,
     ):
-        """ Create the Service with the default parameters. """
+        """Create the Service with the default parameters."""
         self.email = email
         self.password = password
         self.account_type = account_type
@@ -80,7 +80,7 @@ class MockGDataService:
         captcha_response=None,
     ):
 
-        """ Client side login to the service. """
+        """Client side login to the service."""
         if hasattr(self, '_login_err'):
             raise self._login_err()
 
