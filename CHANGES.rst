@@ -1,3 +1,10 @@
+v4.1.0
+======
+
+#44: Bump upper bound on pyfs.
+
+Refresh package metadata.
+
 v4.0.2
 ======
 
