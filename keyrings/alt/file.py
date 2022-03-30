@@ -44,8 +44,12 @@ class Encrypted:
         """
         Create the cipher object to encrypt or decrypt a payload.
         """
-        from Cryptodome.Protocol.KDF import PBKDF2
-        from Cryptodome.Cipher import AES
+        try:
+            from Cryptodome.Protocol.KDF import PBKDF2
+            from Cryptodome.Cipher import AES
+        except ImportError:
+            from Crypto.Protocol.KDF import PBKDF2
+            from Crypto.Cipher import AES
 
         pw = PBKDF2(password, salt, dkLen=self.block_size)
         return AES.new(pw[: self.block_size], AES.MODE_CFB, IV)
@@ -79,7 +83,12 @@ class EncryptedKeyring(Encrypted, Keyring):
             __import__('Cryptodome.Protocol.KDF')
             __import__('Cryptodome.Random')
         except ImportError:  # pragma: no cover
-            raise RuntimeError("pycryptodomex required")
+            try:
+                __import__('Crypto.Cipher.AES')
+                __import__('Crypto.Protocol.KDF')
+                __import__('Crypto.Random')
+            except ImportError:
+                raise RuntimeError("pycryptodomex or pycryptodome required")
         if not json:  # pragma: no cover
             raise RuntimeError("JSON implementation such as simplejson required.")
         return 0.6
@@ -190,10 +199,16 @@ class EncryptedKeyring(Encrypted, Keyring):
 
     def encrypt(self, password, assoc=None):
         # encrypt password, ignore associated data
-        from Cryptodome.Random import get_random_bytes
+        try:
+            from Cryptodome.Random import get_random_bytes
+        except ImportError:
+            from Crypto.Random import get_random_bytes
 
         salt = get_random_bytes(self.block_size)
-        from Cryptodome.Cipher import AES
+        try:
+            from Cryptodome.Cipher import AES
+        except ImportError:
+            from Crypto.Cipher import AES
 
         IV = get_random_bytes(AES.block_size)
         cipher = self._create_cipher(self.keyring_key, salt, IV)

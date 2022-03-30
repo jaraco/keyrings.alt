@@ -14,7 +14,12 @@ def is_crypto_supported():
         __import__('Cryptodome.Protocol.KDF')
         __import__('Cryptodome.Random')
     except ImportError:
-        return False
+        try:
+            __import__('Crypto.Cipher.AES')
+            __import__('Crypto.Protocol.KDF')
+            __import__('Crypto.Random')
+        except ImportError:
+            return False
     return True
 
 
