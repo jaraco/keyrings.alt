@@ -1,3 +1,10 @@
+v4.1.1
+======
+
+Refresh package metadata.
+
+Enrolled with Tidelift.
+
 v4.1.0
 ======
 
