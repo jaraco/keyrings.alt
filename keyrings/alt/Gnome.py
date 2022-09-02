@@ -6,9 +6,9 @@ try:
 except (ImportError, ValueError, AttributeError):
     pass
 
+from jaraco.classes import properties
 from keyring.backend import KeyringBackend
 from keyring.errors import PasswordSetError, PasswordDeleteError
-from keyring.util import properties
 
 
 class Keyring(KeyringBackend):
@@ -20,7 +20,7 @@ class Keyring(KeyringBackend):
     Use None for the default keyring.
     """
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(cls):
         if 'GnomeKeyring' not in globals():

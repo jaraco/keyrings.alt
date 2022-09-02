@@ -2,9 +2,10 @@ import os
 import base64
 import configparser
 
+from jaraco.classes import properties
 from keyring import errors
 from .escape import escape as escape_for_ini
-from keyring.util import platform_, properties
+from keyring.util import platform_
 from keyring.backend import KeyringBackend, NullCrypter
 from . import keyczar
 
@@ -212,7 +213,7 @@ class BasicKeyring(KeyringBackend):
         self.config.write(config_file)
         config_file.close()
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(cls):
         if not has_pyfs():

@@ -2,7 +2,7 @@ import sys
 import base64
 import platform
 
-from keyring.util import properties
+from jaraco.classes import properties
 from keyring.backend import KeyringBackend
 from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
 from . import file_base
@@ -36,7 +36,7 @@ class EncryptedKeyring(file_base.Keyring):
 
     version = "1.0"
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(self):
         """
@@ -64,7 +64,7 @@ class RegistryKeyring(KeyringBackend):
     the user's passwords and store them under registry keys
     """
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(self):
         """

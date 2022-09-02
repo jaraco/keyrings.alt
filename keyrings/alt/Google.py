@@ -14,10 +14,10 @@ except ImportError:
     pass
 
 from . import keyczar
+from jaraco.classes import properties
 from keyring import errors
 from keyring import credentials
 from keyring.backend import KeyringBackend
-from keyring.util import properties
 from keyring.errors import ExceptionRaisedContext
 
 
@@ -70,7 +70,7 @@ class DocsKeyring(KeyringBackend):
         self._client.ssl = True
         self._login_reqd = True
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(cls):
         if not cls._has_gdata():

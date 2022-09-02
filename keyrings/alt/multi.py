@@ -1,6 +1,6 @@
 import itertools
 
-from keyring.util import properties
+from jaraco.classes import properties
 from keyring.backend import KeyringBackend
 from keyring import errors
 
@@ -16,7 +16,7 @@ class MultipartKeyringWrapper(KeyringBackend):
         self._keyring = keyring
         self._max_password_size = max_password_size
 
-    @properties.ClassProperty
+    @properties.classproperty
     @classmethod
     def priority(cls):
         return 0
