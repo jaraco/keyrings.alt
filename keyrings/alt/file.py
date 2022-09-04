@@ -6,9 +6,9 @@ import json
 import getpass
 import configparser
 
-from keyring.util import properties
-from .escape import escape as escape_for_ini
+from jaraco.classes import properties
 
+from .escape import escape as escape_for_ini
 from keyrings.alt.file_base import Keyring, decodebytes, encodebytes
 
 
@@ -70,8 +70,7 @@ class EncryptedKeyring(Encrypted, Keyring):
     filename = 'crypted_pass.cfg'
     pw_prefix = 'pw:'.encode()
 
-    @properties.ClassProperty
-    @classmethod
+    @properties.classproperty
     def priority(self):
         "Applicable for all platforms, but not recommended."
         try:

@@ -1,3 +1,9 @@
+v4.1.2
+======
+
+Updated to work with keyring 23.9+ (no longer depending on properties
+module).
+
 v4.1.1
 ======
 
