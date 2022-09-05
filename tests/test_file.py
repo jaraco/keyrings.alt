@@ -4,6 +4,7 @@ import sys
 import errno
 import getpass
 import configparser
+import functools
 
 import pytest
 from unittest import mock
@@ -154,10 +155,31 @@ class FileKeyringTests(BackendBasicTests):
         assert self.keyring._check_version(config) is False
 
 
+@pytest.fixture(scope="class")
+def monkeyclass(request):
+    from _pytest.monkeypatch import MonkeyPatch
+    mpatch = MonkeyPatch()
+    yield mpatch
+    mpatch.undo()
+
+
+@pytest.fixture(params=('Crypto', 'Cryptodome'), scope='class')
+def crypto_impl(request, monkeyclass):
+    def unload_crypto():
+        matches = [mod for mod in sys.modules if mod.startswith('Crypto')]
+        for mod in matches:
+            del sys.modules[mod]
+    keep = request.param
+    suppress = 'Cryptodome' if keep == 'Crypto' else 'Crypto'
+    monkeyclass.setitem(sys.modules, suppress, None)
+    request.addfinalizer(unload_crypto)
+
+
 @pytest.mark.skipif(
     not file.EncryptedKeyring.viable,
     reason="EncryptedKeyring backend not viable",
 )
+@pytest.mark.usefixtures('crypto_impl')
 class TestEncryptedFileKeyring(FileKeyringTests):
     @pytest.fixture(autouse=True)
     def crypt_fixture(self, monkeypatch):
