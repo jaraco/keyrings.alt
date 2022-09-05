@@ -40,15 +40,27 @@ class Encrypted:
     version = '1.0'
     block_size = 32
 
+    def __init__(self):
+        vars(self).update(self._get_crypto_impl())
+
+    @staticmethod
+    def _get_crypto_impl():
+        try:
+            from Cryptodome.Protocol import KDF  # noqa: F401
+            from Cryptodome.Cipher import AES  # noqa: F401
+            import Cryptodome.Random as Random  # noqa: F401
+        except ImportError:
+            from Crypto.Protocol import KDF  # noqa: F401
+            from Crypto.Cipher import AES  # noqa: F401
+            import Crypto.Random as Random  # noqa: F401
+        return locals()
+
     def _create_cipher(self, password, salt, IV):
         """
         Create the cipher object to encrypt or decrypt a payload.
         """
-        from Cryptodome.Protocol.KDF import PBKDF2
-        from Cryptodome.Cipher import AES
-
-        pw = PBKDF2(password, salt, dkLen=self.block_size)
-        return AES.new(pw[: self.block_size], AES.MODE_CFB, IV)
+        pw = self.KDF.PBKDF2(password, salt, dkLen=self.block_size)
+        return self.AES.new(pw[: self.block_size], self.AES.MODE_CFB, IV)
 
     def _get_new_password(self):
         while True:
@@ -71,14 +83,12 @@ class EncryptedKeyring(Encrypted, Keyring):
     pw_prefix = 'pw:'.encode()
 
     @properties.classproperty
-    def priority(self):
+    def priority(cls):
         "Applicable for all platforms, but not recommended."
         try:
-            __import__('Cryptodome.Cipher.AES')
-            __import__('Cryptodome.Protocol.KDF')
-            __import__('Cryptodome.Random')
+            cls._get_crypto_impl()
         except ImportError:  # pragma: no cover
-            raise RuntimeError("pycryptodomex required")
+            raise RuntimeError("pycryptodome/x required")
         if not json:  # pragma: no cover
             raise RuntimeError("JSON implementation such as simplejson required.")
         return 0.6
@@ -189,12 +199,8 @@ class EncryptedKeyring(Encrypted, Keyring):
 
     def encrypt(self, password, assoc=None):
         # encrypt password, ignore associated data
-        from Cryptodome.Random import get_random_bytes
-
-        salt = get_random_bytes(self.block_size)
-        from Cryptodome.Cipher import AES
-
-        IV = get_random_bytes(AES.block_size)
+        salt = self.Random.get_random_bytes(self.block_size)
+        IV = self.Random.get_random_bytes(self.AES.block_size)
         cipher = self._create_cipher(self.keyring_key, salt, IV)
         password_encrypted = cipher.encrypt(self.pw_prefix + password)
         # Serialize the salt, IV, and encrypted password in a secure format

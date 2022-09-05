@@ -1,3 +1,9 @@
+v4.2.0
+======
+
+#46: EncryptedFileKeyring now supports both pycryptodome and
+pycryptodomex (preferring the latter).
+
 v4.1.2
 ======
 
