@@ -158,6 +158,7 @@ class FileKeyringTests(BackendBasicTests):
 @pytest.fixture(scope="class")
 def monkeyclass(request):
     from _pytest.monkeypatch import MonkeyPatch
+
     mpatch = MonkeyPatch()
     yield mpatch
     mpatch.undo()
@@ -169,6 +170,7 @@ def crypto_impl(request, monkeyclass):
         matches = [mod for mod in sys.modules if mod.startswith('Crypto')]
         for mod in matches:
             del sys.modules[mod]
+
     keep = request.param
     suppress = 'Cryptodome' if keep == 'Crypto' else 'Crypto'
     monkeyclass.setitem(sys.modules, suppress, None)
