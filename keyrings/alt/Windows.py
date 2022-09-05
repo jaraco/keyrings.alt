@@ -2,7 +2,8 @@ import sys
 import base64
 import platform
 
-from keyring.util import properties
+from jaraco.classes import properties
+
 from keyring.backend import KeyringBackend
 from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
 from . import file_base
@@ -36,8 +37,7 @@ class EncryptedKeyring(file_base.Keyring):
 
     version = "1.0"
 
-    @properties.ClassProperty
-    @classmethod
+    @properties.classproperty
     def priority(self):
         """
         Preferred over file.EncryptedKeyring but not other, more sophisticated
@@ -64,8 +64,7 @@ class RegistryKeyring(KeyringBackend):
     the user's passwords and store them under registry keys
     """
 
-    @properties.ClassProperty
-    @classmethod
+    @properties.classproperty
     def priority(self):
         """
         Preferred on Windows when pywin32 isn't installed

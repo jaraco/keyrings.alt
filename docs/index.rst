@@ -7,6 +7,8 @@ Welcome to |project| documentation!
    history
 
 
+.. tidelift-referral-banner::
+
 .. automodule:: keyrings.alt.file
     :members:
     :undoc-members:
@@ -48,4 +50,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
