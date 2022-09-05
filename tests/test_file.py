@@ -4,7 +4,6 @@ import sys
 import errno
 import getpass
 import configparser
-import functools
 
 import pytest
 from unittest import mock
