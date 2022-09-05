@@ -154,17 +154,13 @@ class FileKeyringTests(BackendBasicTests):
         assert self.keyring._check_version(config) is False
 
 
+@pytest.mark.skipif(
+    not file.EncryptedKeyring.viable,
+    reason="EncryptedKeyring backend not viable",
+)
 class TestEncryptedFileKeyring(FileKeyringTests):
     @pytest.fixture(autouse=True)
     def crypt_fixture(self, monkeypatch):
-        try:
-            import Cryptodome
-        except ImportError:
-            try:
-                import Crypto
-            except ImportError:
-                pytest.skip("Neither pycryptodome nor pycryptodomex are available",
-                    allow_module_level=True)
         fake_getpass = mock.Mock(return_value='abcdef')
         monkeypatch.setattr(getpass, 'getpass', fake_getpass)
 
