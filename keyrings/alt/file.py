@@ -15,7 +15,7 @@ from keyrings.alt.file_base import Keyring, decodebytes, encodebytes
 class PlaintextKeyring(Keyring):
     """Simple File Keyring with no encryption"""
 
-    priority = 0.5
+    priority = 0.5  # type: ignore
     "Applicable for all platforms, but not recommended"
 
     filename = 'keyring_pass.cfg'
