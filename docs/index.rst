@@ -38,11 +38,6 @@ Welcome to |project| documentation!
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: keyrings.alt.pyfs
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 .. automodule:: keyrings.alt.Windows
     :members:
     :undoc-members:
