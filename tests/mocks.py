@@ -79,7 +79,6 @@ class MockGDataService:
         captcha_token=None,
         captcha_response=None,
     ):
-
         """Client side login to the service."""
         if hasattr(self, '_login_err'):
             raise self._login_err()

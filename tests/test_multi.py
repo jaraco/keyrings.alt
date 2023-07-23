@@ -10,7 +10,6 @@ class MultipartKeyringWrapperTestCase(unittest.TestCase):
     """Test the wrapper that breaks passwords into smaller chunks"""
 
     class MockKeyring(KeyringBackend):
-
         priority = 1
 
         def __init__(self):

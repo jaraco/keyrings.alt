@@ -82,7 +82,6 @@ class TestUnencryptedLocalPyfilesystemKeyringSubDir(PyFSBackend):
     keyring_filename = os.path.join(keyring_dir, 'keyring.cfg')
 
     def init_keyring(self):
-
         if not os.path.exists(self.keyring_dir):
             os.makedirs(self.keyring_dir)
         return pyfs.PlaintextKeyring(filename=self.keyring_filename)
