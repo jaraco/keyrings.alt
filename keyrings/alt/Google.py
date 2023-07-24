@@ -329,10 +329,11 @@ class KeyczarDocsKeyring(DocsKeyring):
         super(KeyczarDocsKeyring, self).__init__(credential, source, crypter)
 
     def supported(self):
-        """Return if this keyring supports current environment:
+        """
+        Return if this keyring supports current environment:
         -1: not applicable
-         0: suitable
-         1: recommended
+        0: suitable
+        1: recommended
         """
         try:
             __import__('keyczar.keyczar')

@@ -42,3 +42,7 @@ intersphinx_mapping = {
 autodoc_preserve_defaults = True
 
 extensions += ['jaraco.tidelift']
+
+intersphinx_mapping.update(
+    keyring=('https://keyring.readthedocs.io/en/latest/', None),
+)

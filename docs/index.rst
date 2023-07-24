@@ -48,6 +48,12 @@ Welcome to |project| documentation!
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: keyrings.alt.file_base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Indices and tables
 ==================
 
