@@ -1,3 +1,18 @@
+v5.0.0
+======
+
+Features
+--------
+
+- Require Python 3.8 or later.
+
+
+Deprecations and Removals
+-------------------------
+
+- Removed the pyfs backend, as it has eroded beyond repair. (#49)
+
+
 v4.2.0
 ======
 
