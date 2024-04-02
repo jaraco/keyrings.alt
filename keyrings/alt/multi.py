@@ -7,7 +7,6 @@ from keyring import errors
 
 
 class MultipartKeyringWrapper(KeyringBackend):
-
     """A wrapper around an existing keyring that breaks the password into
     smaller parts to handle implementations that have limits on the maximum
     length of passwords i.e. Windows Vault

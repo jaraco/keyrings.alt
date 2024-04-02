@@ -6,7 +6,6 @@ from . import mocks
 
 
 class KeyczarCrypterTestCase(unittest.TestCase):
-
     """Test the keyczar crypter"""
 
     def setUp(self):

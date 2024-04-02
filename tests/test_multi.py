@@ -6,7 +6,6 @@ import keyring.errors
 
 
 class MultipartKeyringWrapperTestCase(unittest.TestCase):
-
     """Test the wrapper that breaks passwords into smaller chunks"""
 
     class MockKeyring(KeyringBackend):
