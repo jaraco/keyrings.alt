@@ -37,11 +37,11 @@ class FileKeyringTests(BackendBasicTests):
     def get_config(self):
         # setting a password triggers keyring file creation
         config = configparser.RawConfigParser()
-        config.read(self.keyring.file_path)
+        config.read(self.keyring.file_path, encoding='utf-8')
         return config
 
     def save_config(self, config):
-        with open(self.keyring.file_path, 'w') as config_file:
+        with open(self.keyring.file_path, 'w', encoding='utf-8') as config_file:
             config.write(config_file)
 
     def test_encrypt_decrypt(self):

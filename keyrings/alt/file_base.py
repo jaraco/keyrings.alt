@@ -96,7 +96,7 @@ class Keyring(FileBacked, KeyringBackend):
         # load the passwords from the file
         config = configparser.RawConfigParser()
         if os.path.exists(self.file_path):
-            config.read(self.file_path)
+            config.read(self.file_path, encoding='utf-8')
 
         # fetch the password
         try:
@@ -138,7 +138,7 @@ class Keyring(FileBacked, KeyringBackend):
 
         # load the keyring from the disk
         config = configparser.RawConfigParser()
-        config.read(self.file_path)
+        config.read(self.file_path, encoding='utf-8')
 
         service = escape_for_ini(service)
         key = escape_for_ini(key)
@@ -149,7 +149,7 @@ class Keyring(FileBacked, KeyringBackend):
         config.set(service, key, value)
 
         # save the keyring back to the file
-        with open(self.file_path, 'w') as config_file:
+        with open(self.file_path, 'w', encoding='utf-8') as config_file:
             config.write(config_file)
 
     def _ensure_file_path(self):
@@ -163,7 +163,7 @@ class Keyring(FileBacked, KeyringBackend):
             os.makedirs(storage_root)
         if not os.path.isfile(self.file_path):
             # create the file without group/world permissions
-            with open(self.file_path, 'w'):
+            with open(self.file_path, 'w', encoding='utf-8'):
                 pass
             user_read_write = 0o600
             os.chmod(self.file_path, user_read_write)
@@ -174,12 +174,12 @@ class Keyring(FileBacked, KeyringBackend):
         username = escape_for_ini(username)
         config = configparser.RawConfigParser()
         if os.path.exists(self.file_path):
-            config.read(self.file_path)
+            config.read(self.file_path, encoding='utf-8')
         try:
             if not config.remove_option(service, username):
                 raise PasswordDeleteError("Password not found")
         except configparser.NoSectionError:
             raise PasswordDeleteError("Password not found")
         # update the file
-        with open(self.file_path, 'w') as config_file:
+        with open(self.file_path, 'w', encoding='utf-8') as config_file:
             config.write(config_file)

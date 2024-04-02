@@ -123,7 +123,7 @@ class EncryptedKeyring(Encrypted, Keyring):
             return False
         self._migrate()
         config = configparser.RawConfigParser()
-        config.read(self.file_path)
+        config.read(self.file_path, encoding='utf-8')
         try:
             config.get(
                 escape_for_ini('keyring-setting'), escape_for_ini('password reference')
