@@ -19,6 +19,12 @@ ignore = [
 	"COM819",
 	"ISC001",
 	"ISC002",
+
+	# B904 is a nuisance
+	"B904",
+
+	# This project uses attribute access for its side effect
+	"B018",
 ]
 
 [format]
