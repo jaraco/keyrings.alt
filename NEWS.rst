@@ -1,3 +1,12 @@
+v5.0.1
+======
+
+Bugfixes
+--------
+
+- Fix encoding warnings.
+
+
 v5.0.0
 ======
 
