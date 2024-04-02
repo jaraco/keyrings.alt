@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-
-import os
 import abc
+import os
 
 try:
     from keyczar import keyczar

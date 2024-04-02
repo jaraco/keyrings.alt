@@ -1,11 +1,11 @@
-import sys
 import base64
 import platform
+import sys
 
 from jaraco.classes import properties
-
 from keyring.backend import KeyringBackend
-from keyring.errors import PasswordDeleteError, ExceptionRaisedContext
+from keyring.errors import ExceptionRaisedContext, PasswordDeleteError
+
 from . import file_base
 
 try:
@@ -92,7 +92,7 @@ class RegistryKeyring(KeyringBackend):
             password_encrypted = base64.decodebytes(password_base64)
             # decrypted the password
             password = _win_crypto.decrypt(password_encrypted).decode('utf-8')
-        except EnvironmentError:
+        except OSError:
             password = None
         return password
 
@@ -119,7 +119,7 @@ class RegistryKeyring(KeyringBackend):
             )
             winreg.DeleteValue(hkey, username)
             winreg.CloseKey(hkey)
-        except WindowsError:
+        except OSError:
             e = sys.exc_info()[1]
             raise PasswordDeleteError(e)
         self._delete_key_if_empty(service)
@@ -132,7 +132,7 @@ class RegistryKeyring(KeyringBackend):
         try:
             winreg.EnumValue(key, 0)
             return
-        except WindowsError:
+        except OSError:
             pass
         winreg.CloseKey(key)
 

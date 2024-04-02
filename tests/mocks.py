@@ -171,7 +171,7 @@ class MockDocumentService(MockGDataService):
 
 class MockHttpResponse(io.BytesIO):
     def __init__(self, response_dict):
-        super(MockHttpResponse, self).__init__(response_dict.get('data', ''))
+        super().__init__(response_dict.get('data', ''))
         self.status = response_dict.get('status', 200)
         self.reason = response_dict.get('reason', '')
 

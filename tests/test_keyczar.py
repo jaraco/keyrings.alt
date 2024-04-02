@@ -2,6 +2,7 @@ import os
 import unittest
 
 from keyrings.alt import keyczar
+
 from . import mocks
 
 

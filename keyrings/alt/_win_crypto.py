@@ -1,16 +1,16 @@
-from __future__ import unicode_literals
-
 from ctypes import (
-    Structure,
     POINTER,
+    WINFUNCTYPE,
+    Structure,
+    WinDLL,
+    byref,
+    c_char_p,
     c_void_p,
     cast,
     create_string_buffer,
-    c_char_p,
-    byref,
     memmove,
+    windll,
 )
-from ctypes import windll, WinDLL, WINFUNCTYPE
 
 try:
     from ctypes import wintypes

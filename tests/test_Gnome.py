@@ -1,9 +1,10 @@
-import types
 import sys
+import types
 import unittest
 
 from keyring.testing.backend import BackendBasicTests
 from keyring.testing.util import NoNoneDictMutator
+
 from keyrings.alt import Gnome
 
 

@@ -3,9 +3,9 @@ from unittest import mock
 
 import pytest
 
-from .test_file import FileKeyringTests
-
 from keyrings.alt import file
+
+from .test_file import FileKeyringTests
 
 
 def is_crypto_supported():

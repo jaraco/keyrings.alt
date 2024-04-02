@@ -1,21 +1,19 @@
-import os
-import tempfile
-import sys
+import configparser
 import errno
 import getpass
-import configparser
-
-import pytest
+import os
+import sys
+import tempfile
 from unittest import mock
 
+import pytest
+from keyring.errors import PasswordDeleteError
 from keyring.testing.backend import BackendBasicTests
 from keyring.testing.util import random_string
 
 from keyrings.alt import file
-from keyrings.alt.file_base import encodebytes
 from keyrings.alt.escape import escape as escape_for_ini
-
-from keyring.errors import PasswordDeleteError
+from keyrings.alt.file_base import encodebytes
 
 
 class FileKeyringTests(BackendBasicTests):
@@ -57,7 +55,7 @@ class FileKeyringTests(BackendBasicTests):
         self.set_password('system', 'user', 'password')
         config = self.get_config()
         # generate and save password without assoc data
-        encrypted = self.keyring.encrypt('password'.encode('utf-8'))
+        encrypted = self.keyring.encrypt(b'password')
         password_base64 = '\n' + encodebytes(encrypted).decode()
         config.set('system', 'user', password_base64)
         self.save_config(config)

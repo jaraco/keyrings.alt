@@ -1,8 +1,9 @@
 import unittest
 
-from keyring.backend import KeyringBackend
-from keyrings.alt import multi
 import keyring.errors
+from keyring.backend import KeyringBackend
+
+from keyrings.alt import multi
 
 
 class MultipartKeyringWrapperTestCase(unittest.TestCase):

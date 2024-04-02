@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-
-import os
-import sys
-import copy
-import codecs
 import base64
+import codecs
+import copy
 import io
+import os
 import pickle
+import sys
 
 try:
     import gdata.docs.service
@@ -14,21 +12,18 @@ except ImportError:
     pass
 
 from jaraco.classes import properties
-
-from . import keyczar
-from keyring import errors
-from keyring import credentials
+from keyring import credentials, errors
 from keyring.backend import KeyringBackend
 from keyring.errors import ExceptionRaisedContext
+
+from . import keyczar
 
 
 class EnvironCredential(credentials.EnvironCredential):
     """Retrieve credentials from specifically named environment variables"""
 
     def __init__(self):
-        super(EnvironCredential, self).__init__(
-            'GOOGLE_KEYRING_USER', 'GOOGLE_KEYRING_PASSWORD'
-        )
+        super().__init__('GOOGLE_KEYRING_USER', 'GOOGLE_KEYRING_PASSWORD')
 
 
 class DocsKeyring(KeyringBackend):
@@ -129,8 +124,8 @@ class DocsKeyring(KeyringBackend):
                     )
             else:
                 raise errors.PasswordSetError(
-                    'Conflict detected, service:%s and username:%s was '
-                    'set to a different value by someone else' % (service, username)
+                    f'Conflict detected, service:{service} and username:{username} was '
+                    'set to a different value by someone else'
                 )
 
         raise errors.PasswordSetError('Could not save keyring')
@@ -221,8 +216,7 @@ class DocsKeyring(KeyringBackend):
                 keyring_dict = {}
             else:
                 raise errors.InitError(
-                    '%s not found in %s and create not permitted'
-                    % (self._get_doc_title(), self.collection)
+                    f'{self._get_doc_title()} not found in {self.collection} and create not permitted'
                 )
         else:
             docs_entry = docs.entry[0]
@@ -326,7 +320,7 @@ class KeyczarDocsKeyring(DocsKeyring):
         crypter = keyczar.EnvironCrypter()
         credential = EnvironCredential()
         source = os.environ.get('GOOGLE_KEYRING_SOURCE')
-        super(KeyczarDocsKeyring, self).__init__(credential, source, crypter)
+        super().__init__(credential, source, crypter)
 
     def supported(self):
         """
@@ -337,6 +331,6 @@ class KeyczarDocsKeyring(DocsKeyring):
         """
         try:
             __import__('keyczar.keyczar')
-            return super(KeyczarDocsKeyring, self).supported()
+            return super().supported()
         except ImportError:
             return -1

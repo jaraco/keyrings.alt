@@ -1,9 +1,8 @@
 import itertools
 
 from jaraco.classes import properties
-
-from keyring.backend import KeyringBackend
 from keyring import errors
+from keyring.backend import KeyringBackend
 
 
 class MultipartKeyringWrapper(KeyringBackend):

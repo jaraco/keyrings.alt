@@ -1,15 +1,13 @@
-from __future__ import with_statement
-
-import os
 import abc
 import configparser
-from base64 import encodebytes, decodebytes
+import os
+from base64 import decodebytes, encodebytes
 
 from jaraco.classes import properties
-
-from keyring.errors import PasswordDeleteError
 from keyring.backend import KeyringBackend
+from keyring.errors import PasswordDeleteError
 from keyring.util import platform_
+
 from .escape import escape as escape_for_ini
 
 

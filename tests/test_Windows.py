@@ -1,11 +1,10 @@
-from __future__ import print_function
-
 import sys
 
 import pytest
+from keyring.testing.backend import BackendBasicTests
 
 from keyrings.alt import Windows
-from keyring.testing.backend import BackendBasicTests
+
 from .test_file import FileKeyringTests
 
 

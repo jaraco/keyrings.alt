@@ -1,13 +1,15 @@
-import codecs
 import base64
-import unittest
+import codecs
 import pickle
+import unittest
 
-from keyring.testing.backend import BackendBasicTests
-from keyrings.alt import Google
-from keyring.credentials import SimpleCredential
-from keyring.backend import NullCrypter
 from keyring import errors
+from keyring.backend import NullCrypter
+from keyring.credentials import SimpleCredential
+from keyring.testing.backend import BackendBasicTests
+
+from keyrings.alt import Google
+
 from . import mocks
 
 

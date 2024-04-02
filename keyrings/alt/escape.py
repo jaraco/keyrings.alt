@@ -8,7 +8,7 @@ import string
 
 LEGAL_CHARS = (
     getattr(string, 'letters', None)  # Python 2
-    or getattr(string, 'ascii_letters')  # Python 3
+    or string.ascii_letters  # Python 3
 ) + string.digits
 
 ESCAPE_FMT = "_%02X"

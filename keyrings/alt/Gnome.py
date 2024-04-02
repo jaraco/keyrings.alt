@@ -7,9 +7,8 @@ except (ImportError, ValueError, AttributeError):
     pass
 
 from jaraco.classes import properties
-
 from keyring.backend import KeyringBackend
-from keyring.errors import PasswordSetError, PasswordDeleteError
+from keyring.errors import PasswordDeleteError, PasswordSetError
 
 
 class Keyring(KeyringBackend):
@@ -80,7 +79,7 @@ class Keyring(KeyringBackend):
         result = GnomeKeyring.item_create_sync(
             self.keyring_name,
             GnomeKeyring.ItemType.NETWORK_PASSWORD,
-            "Password for '%s' on '%s'" % (username, service),
+            f"Password for '{username}' on '{service}'",
             attrs,
             password,
             True,

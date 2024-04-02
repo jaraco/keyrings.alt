@@ -1,15 +1,14 @@
-from __future__ import with_statement
-
+import configparser
+import getpass
+import json
 import os
 import sys
-import json
-import getpass
-import configparser
 
 from jaraco.classes import properties
 
-from .escape import escape as escape_for_ini
 from keyrings.alt.file_base import Keyring, decodebytes, encodebytes
+
+from .escape import escape as escape_for_ini
 
 
 class PlaintextKeyring(Keyring):
@@ -46,13 +45,13 @@ class Encrypted:
     @staticmethod
     def _get_crypto_impl():
         try:
-            from Cryptodome.Protocol import KDF  # noqa: F401
-            from Cryptodome.Cipher import AES  # noqa: F401
             import Cryptodome.Random as Random  # noqa: F401
+            from Cryptodome.Cipher import AES  # noqa: F401
+            from Cryptodome.Protocol import KDF  # noqa: F401
         except ImportError:
-            from Crypto.Protocol import KDF  # noqa: F401
-            from Crypto.Cipher import AES  # noqa: F401
             import Crypto.Random as Random  # noqa: F401
+            from Crypto.Cipher import AES  # noqa: F401
+            from Crypto.Protocol import KDF  # noqa: F401
         return locals()
 
     def _create_cipher(self, password, salt, IV):
@@ -80,7 +79,7 @@ class EncryptedKeyring(Encrypted, Keyring):
     """PyCryptodome File Keyring"""
 
     filename = 'crypted_pass.cfg'
-    pw_prefix = 'pw:'.encode()
+    pw_prefix = b'pw:'
 
     @properties.classproperty
     def priority(cls):
@@ -157,8 +156,7 @@ class EncryptedKeyring(Encrypted, Keyring):
 
         if scheme != self.scheme:
             raise ValueError(
-                "Encryption scheme mismatch "
-                "(exp.: %s, found: %s)" % (self.scheme, scheme)
+                "Encryption scheme mismatch " f"(exp.: {self.scheme}, found: {scheme})"
             )
 
     def _check_version(self, config):
