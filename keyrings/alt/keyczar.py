@@ -1,19 +1,23 @@
 import abc
 import os
 
+from jaraco.context import ExceptionTrap
+
 try:
     from keyczar import keyczar
 except ImportError:
     pass
 
 import keyring.backend
-from keyring import errors
 
 
+# For Python 3.8 compatibility
+passes = ExceptionTrap().passes
+
+
+@passes
 def has_keyczar():
-    with errors.ExceptionRaisedContext() as exc:
-        keyczar.__name__
-    return not bool(exc)
+    keyczar.__name__
 
 
 class BaseCrypter(keyring.backend.Crypter):

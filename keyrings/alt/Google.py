@@ -12,9 +12,9 @@ except ImportError:
     pass
 
 from jaraco.classes import properties
+from jaraco.context import ExceptionTrap
 from keyring import credentials, errors
 from keyring.backend import KeyringBackend
-from keyring.errors import ExceptionRaisedContext
 
 from . import keyczar
 
@@ -74,11 +74,13 @@ class DocsKeyring(KeyringBackend):
             raise RuntimeError("Requires keyczar")
         return 3
 
+    # For Python 3.8 compatibility
+    passes = ExceptionTrap().passes
+
+    @passes
     @classmethod
     def _has_gdata(cls):
-        with ExceptionRaisedContext() as exc:
-            gdata.__name__
-        return not bool(exc)
+        gdata.__name__
 
     def get_password(self, service, username):
         """Get password of the username for the service"""

@@ -3,8 +3,9 @@ import platform
 import sys
 
 from jaraco.classes import properties
+from jaraco.context import ExceptionTrap
 from keyring.backend import KeyringBackend
-from keyring.errors import ExceptionRaisedContext, PasswordDeleteError
+from keyring.errors import PasswordDeleteError
 
 from . import file_base
 
@@ -19,15 +20,18 @@ except ImportError:
     pass
 
 
+# For Python 3.8 compatibility
+passes = ExceptionTrap().passes
+
+
+@passes
 def has_wincrypto():
     """
     Does this environment have wincrypto?
     Should return False even when Mercurial's Demand Import allowed import of
     _win_crypto, so accesses an attribute of the module.
     """
-    with ExceptionRaisedContext() as exc:
-        _win_crypto.__name__
-    return not bool(exc)
+    _win_crypto.__name__
 
 
 class EncryptedKeyring(file_base.Keyring):
