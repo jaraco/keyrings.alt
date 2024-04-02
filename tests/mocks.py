@@ -135,7 +135,7 @@ class MockDocumentService(MockGDataService):
             self._put_count = 0
         if hasattr(self, '_put_err'):
             # allow for a list of errors
-            if type(self._put_err) == list:
+            if isinstance(self._put_err, list):
                 put_err = self._put_err.pop(0)
                 if not len(self._put_err):
                     delattr(self, '_put_err')
