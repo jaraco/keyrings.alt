@@ -24,10 +24,10 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/jaraco/keyrings.alt"
+Source = "https://github.com/jaraco/keyrings.alt"
 
 [project.optional-dependencies]
-testing = [
+test = [
 	# upstream
 	"pytest >= 6, != 8.1.*",
 	"pytest-checkdocs >= 2.4",
@@ -48,7 +48,7 @@ testing = [
 	# http://code.google.com/p/keyczar/issues/detail?id=125
 	'python-keyczar; python_version=="2.7"',
 ]
-docs = [
+doc = [
 	# upstream
 	"sphinx >= 3.5",
 	"jaraco.packaging >= 9.3",
