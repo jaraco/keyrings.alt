@@ -151,6 +151,10 @@ class FileKeyringTests(BackendBasicTests):
         self.save_config(config)
         assert self.keyring._check_version(config) is False
 
+    def test_empty_username(self):
+        with pytest.raises(ValueError):
+            self.set_password('service1', '', 'password1')
+
 
 @pytest.fixture(scope="class")
 def monkeyclass(request):
