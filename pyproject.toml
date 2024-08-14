@@ -37,7 +37,6 @@ test = [
 	"pytest-ruff >= 0.2.1; sys_platform != 'cygwin'",
 
 	# local
-	"backports.unittest_mock",
 	"keyring >= 20",
 	"pycryptodomex",
 	"pycryptodome",
