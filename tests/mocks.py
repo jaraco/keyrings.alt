@@ -141,7 +141,7 @@ class MockDocumentService(MockGDataService):
                     delattr(self, '_put_err')
             else:
                 put_err = self._put_err
-            if type(put_err) == tuple:
+            if type(put_err) is tuple:
                 raise put_err[0](put_err[1])
             else:
                 raise put_err()
@@ -161,7 +161,7 @@ class MockDocumentService(MockGDataService):
 
     def request(self, data, uri):
         if hasattr(self, '_request_err'):
-            if type(self._request_err) == tuple:
+            if type(self._request_err) is tuple:
                 raise self._request_err[0](self._request_err[1])
             else:
                 raise self._request_err()
