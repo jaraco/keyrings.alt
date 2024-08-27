@@ -14,7 +14,7 @@ from .escape import escape as escape_for_ini
 class PlaintextKeyring(Keyring):
     """Simple File Keyring with no encryption"""
 
-    priority = 0.5  # type: ignore
+    priority = 0.5  # type: ignore[assignment] # jaraco.classes.properties.classproperty isn't seen as a property
     "Applicable for all platforms, but not recommended"
 
     filename = 'keyring_pass.cfg'

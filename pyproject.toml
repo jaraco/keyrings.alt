@@ -4,9 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "keyrings.alt"
-authors = [
-	{ name = "Jason R. Coombs", email = "jaraco@jaraco.com" },
-]
+authors = [{ name = "Jason R. Coombs", email = "jaraco@jaraco.com" }]
 description = "Alternate keyring implementations"
 readme = "README.rst"
 classifiers = [
@@ -35,11 +33,14 @@ test = [
 	"keyring >= 20",
 	"pycryptodomex",
 	"pycryptodome",
-	# gdata doesn't currently install on Python 3
-	# http://code.google.com/p/gdata-python-client/issues/detail?id=229
+	# gdata is archived since 2022, last update in 2016
+	# it installs but doesn't import on Python 3
+	# https://github.com/google/gdata-python-client/issues/29
+	# https://github.com/google/gdata-python-client/issues/65
 	'gdata; python_version=="2.7"',
-	# keyczar doesn't currently install on Python 3.
-	# http://code.google.com/p/keyczar/issues/detail?id=125
+	# Keyczar is deprecated in favor of Tink as of 2019. Archived since 2022.
+	# python-keyczar also doesn't install on Python 3
+	# https://github.com/google/keyczar/issues/125
 	'python-keyczar; python_version=="2.7"',
 ]
 
@@ -57,24 +58,18 @@ doc = [
 	# local
 ]
 
-check = [
-	"pytest-checkdocs >= 2.4",
-	"pytest-ruff >= 0.2.1; sys_platform != 'cygwin'",
-]
+check = ["pytest-checkdocs >= 2.4", "pytest-ruff >= 0.2.1; sys_platform != 'cygwin'"]
 
-cover = [
-	"pytest-cov",
-]
+cover = ["pytest-cov"]
 
-enabler = [
-	"pytest-enabler >= 2.2",
-]
+enabler = ["pytest-enabler >= 2.2"]
 
 type = [
 	# upstream
 	"pytest-mypy",
 
 	# local
+	"PyGObject-stubs",
 ]
 
 
@@ -88,7 +83,3 @@ multi = "keyrings.alt.multi"
 
 
 [tool.setuptools_scm]
-
-
-[tool.pytest-enabler.mypy]
-# Disabled due to jaraco/skeleton#143

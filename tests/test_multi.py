@@ -10,7 +10,7 @@ class MultipartKeyringWrapperTestCase(unittest.TestCase):
     """Test the wrapper that breaks passwords into smaller chunks"""
 
     class MockKeyring(KeyringBackend):
-        priority = 1  # type: ignore
+        priority = 1  # type: ignore[assignment] # jaraco.classes.properties.classproperty isn't seen as a property
 
         def __init__(self):
             self.passwords = {}
