@@ -156,7 +156,7 @@ class EncryptedKeyring(Encrypted, Keyring):
 
         if scheme != self.scheme:
             raise ValueError(
-                "Encryption scheme mismatch " f"(exp.: {self.scheme}, found: {scheme})"
+                f"Encryption scheme mismatch (exp.: {self.scheme}, found: {scheme})"
             )
 
     def _check_version(self, config):
