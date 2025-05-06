@@ -2,7 +2,9 @@ try:
     import gi
 
     gi.require_version('GnomeKeyring', '1.0')
-    from gi.repository import GnomeKeyring
+    from gi.repository import (  # type: ignore[attr-defined] # Missing from PyGObject-stubs
+        GnomeKeyring,
+    )
 except (ImportError, ValueError, AttributeError):
     pass
 

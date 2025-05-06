@@ -1,4 +1,17 @@
-from ctypes import (
+import os
+import sys
+
+if os.name != "nt":
+    raise ImportError(
+        "Module " + __name__ + " can only be imported on nt platforms. Not " + os.name
+    )
+
+# python/mypy#8166
+# python/typing#1732
+# python/mypy#9025
+assert sys.platform == "win32"
+
+from ctypes import (  # noqa: E402
     POINTER,
     WINFUNCTYPE,
     Structure,
@@ -10,13 +23,8 @@ from ctypes import (
     create_string_buffer,
     memmove,
     windll,
+    wintypes,
 )
-
-try:
-    from ctypes import wintypes
-except ValueError:
-    # see http://bugs.python.org/issue16396
-    raise ImportError("wintypes")
 
 # Crypto API ctypes bindings
 
