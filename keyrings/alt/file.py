@@ -18,7 +18,7 @@ class PlaintextKeyring(Keyring):
     "Applicable for all platforms, but not recommended"
 
     filename = 'keyring_pass.cfg'
-    scheme = 'no encyption'
+    scheme = 'no encryption'
     version = '1.0'
 
     def encrypt(self, password, assoc=None):
