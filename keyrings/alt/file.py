@@ -47,10 +47,12 @@ class Encrypted:
         try:
             from Cryptodome import Random
             from Cryptodome.Cipher import AES
+            from Cryptodome.Hash import SHA1
             from Cryptodome.Protocol import KDF
         except ImportError:
             from Crypto import Random  # noqa: F401
             from Crypto.Cipher import AES  # noqa: F401
+            from Crypto.Hash import SHA1  # noqa: F401
             from Crypto.Protocol import KDF  # noqa: F401
         return locals()
 
@@ -58,7 +60,15 @@ class Encrypted:
         """
         Create the cipher object to encrypt or decrypt a payload.
         """
-        pw = self.KDF.PBKDF2(password, salt, dkLen=self.block_size)
+        # Explicitly pass the legacy defaults to retain compatibility with
+        # existing keyring files (jaraco/keyrings.alt#58).
+        pw = self.KDF.PBKDF2(
+            password,
+            salt,
+            dkLen=self.block_size,
+            count=1000,
+            hmac_hash_module=self.SHA1,
+        )
         return self.AES.new(pw[: self.block_size], self.AES.MODE_CFB, IV)
 
     def _get_new_password(self):
