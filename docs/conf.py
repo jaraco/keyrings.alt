@@ -60,3 +60,11 @@ extensions += ['jaraco.tidelift']
 intersphinx_mapping.update(
     keyring=('https://keyring.readthedocs.io/en/latest/', None),
 )
+
+# ExceptionTrap.passes from jaraco.context is annotated with private typing
+# names that Sphinx can't resolve.
+nitpick_ignore += [
+    ('py:class', '_P'),
+    ('py:class', '_R'),
+    ('py:class', 'functools._Wrapped'),
+]
