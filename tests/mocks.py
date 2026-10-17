@@ -19,7 +19,7 @@ class MockEntry:
 
     def __init__(self, title, ID):
         self.title = MockAtom(title)
-        self.id = MockAtom('http://mock.example.com/%s' % ID)
+        self.id = MockAtom(f'http://mock.example.com/{ID}')
         self.ID = ID  # simpler lookup for key value
 
     def GetEditMediaLink(self):
@@ -155,9 +155,8 @@ class MockDocumentService(MockGDataService):
         if hasattr(self, '_export_err'):
             raise self._export_err()
         if hasattr(self, '_export_data'):
-            export_file = open(file_path, 'wb')
-            export_file.write(self._export_data)
-            export_file.close()
+            with open(file_path, 'wb') as export_file:
+                export_file.write(self._export_data)
 
     def request(self, data, uri):
         if hasattr(self, '_request_err'):

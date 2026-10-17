@@ -142,7 +142,7 @@ class RegistryKeyring(KeyringBackend):
 
         # it's empty; delete everything
         while key_name != 'Software':
-            parent, sep, base = key_name.rpartition('\\')
+            parent, _sep, base = key_name.rpartition('\\')
             key = winreg.OpenKey(
                 winreg.HKEY_CURRENT_USER, parent, 0, winreg.KEY_ALL_ACCESS
             )

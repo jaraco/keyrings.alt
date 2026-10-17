@@ -202,7 +202,7 @@ class DocsKeyring(KeyringBackend):
         return self.crypter.encrypt(value)
 
     def _get_doc_title(self):
-        return '%s' % self.keyring_title
+        return f'{self.keyring_title}'
 
     def _read(self):
         from gdata.docs.service import DocumentQuery
@@ -232,8 +232,7 @@ class DocsKeyring(KeyringBackend):
                         'Could not read existing Google Docs keyring'
                     )
                 file_contents = server_response.read()
-                if file_contents.startswith(codecs.BOM_UTF8):
-                    file_contents = file_contents[len(codecs.BOM_UTF8) :]
+                file_contents = file_contents.removeprefix(codecs.BOM_UTF8)
                 keyring_dict = pickle.loads(
                     base64.urlsafe_b64decode(file_contents.decode('string-escape'))
                 )
@@ -300,14 +299,14 @@ class DocsKeyring(KeyringBackend):
                     # Workaround by re-reading to see if it actually updated
                     msg = 'Sorry, there was an error saving the file'
                     if ex.message['body'].find(msg) != -1:
-                        new_docs_entry, new_keyring_dict = self._read()
+                        _new_docs_entry, new_keyring_dict = self._read()
                         if new_keyring_dict == keyring_dict:
                             result = self.OK
                         else:
                             result = self.FAIL
                     else:
                         result = self.FAIL
-            except Exception:
+            except Exception:  # noqa: BLE001
                 result = self.FAIL
 
         return result

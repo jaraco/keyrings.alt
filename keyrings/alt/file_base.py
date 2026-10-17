@@ -45,7 +45,6 @@ class FileBacked:
         """
         The encryption version used in file to store the passwords.
         """
-        return None
 
     def __repr__(self):
         tmpl = (

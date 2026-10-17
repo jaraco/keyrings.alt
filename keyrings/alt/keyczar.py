@@ -10,7 +10,6 @@ except ImportError:
 
 import keyring.backend
 
-
 # For Python 3.8 compatibility
 passes = ExceptionTrap().passes
 
@@ -28,14 +27,12 @@ class BaseCrypter(keyring.backend.Crypter):
     @abc.abstractproperty
     def keyset_location(self):
         """Location for the main keyset that may be encrypted or not"""
-        pass
 
     @abc.abstractproperty
     def encrypting_keyset_location(self):
         """Location for the encrypting keyset.
         Use None to indicate that the main keyset is not encrypted
         """
-        pass
 
     @property
     def crypter(self):
@@ -92,7 +89,7 @@ class EnvironCrypter(BaseCrypter):
     def keyset_location(self):
         val = os.environ.get(self.KEYSET_ENV_VAR)
         if not val:
-            raise ValueError('%s environment value not set' % self.KEYSET_ENV_VAR)
+            raise ValueError(f'{self.KEYSET_ENV_VAR} environment value not set')
         return val
 
     @property

@@ -45,11 +45,11 @@ class Encrypted:
     @staticmethod
     def _get_crypto_impl():
         try:
-            import Cryptodome.Random as Random  # noqa: F401
-            from Cryptodome.Cipher import AES  # noqa: F401
-            from Cryptodome.Protocol import KDF  # noqa: F401
+            from Cryptodome import Random
+            from Cryptodome.Cipher import AES
+            from Cryptodome.Protocol import KDF
         except ImportError:
-            import Crypto.Random as Random  # noqa: F401
+            from Crypto import Random  # noqa: F401
             from Crypto.Cipher import AES  # noqa: F401
             from Crypto.Protocol import KDF  # noqa: F401
         return locals()
@@ -151,8 +151,7 @@ class EncryptedKeyring(Encrypted, Keyring):
             raise AttributeError("Encryption scheme missing")
 
         # remove pointless crypto module name
-        if scheme.startswith('PyCrypto '):
-            scheme = scheme[9:]
+        scheme = scheme.removeprefix('PyCrypto ')
 
         if scheme != self.scheme:
             raise ValueError(
