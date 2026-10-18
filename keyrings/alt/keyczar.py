@@ -10,11 +10,8 @@ except ImportError:
 
 import keyring.backend
 
-# For Python 3.8 compatibility
-passes = ExceptionTrap().passes
 
-
-@passes
+@ExceptionTrap().passes
 def has_keyczar():
     keyczar.__name__
 

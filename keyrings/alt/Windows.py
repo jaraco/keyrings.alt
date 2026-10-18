@@ -20,11 +20,7 @@ except ImportError:
     pass
 
 
-# For Python 3.8 compatibility
-passes = ExceptionTrap().passes
-
-
-@passes
+@ExceptionTrap().passes
 def has_wincrypto():
     """
     Does this environment have wincrypto?

@@ -74,10 +74,7 @@ class DocsKeyring(KeyringBackend):
             raise RuntimeError("Requires keyczar")
         return 3
 
-    # For Python 3.8 compatibility
-    passes = ExceptionTrap().passes
-
-    @passes
+    @ExceptionTrap().passes
     @classmethod
     def _has_gdata(cls):
         gdata.__name__
